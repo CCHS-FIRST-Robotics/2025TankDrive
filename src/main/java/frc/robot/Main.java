@@ -9,11 +9,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 /**
  * to do: 
  * 
- * test positionwithjoysticks
- * 
- * arm motion profiling
- * tune PIDs
- * test pneumatics
  */
 
 public final class Main {
