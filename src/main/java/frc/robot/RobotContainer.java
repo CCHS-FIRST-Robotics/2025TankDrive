@@ -6,34 +6,43 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import edu.wpi.first.wpilibj2.command.*;
+
+
+
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.*;
-import frc.robot.commands.DriveWithJoysticks;
-import frc.robot.subsystems.drive.*;
+import frc.robot.commands.*;
+import frc.robot.subsystems.Drive.Drive;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIOTalonSRX;
+
 
 public class RobotContainer {
-    private final CommandXboxController controller = new CommandXboxController(Constants.CONTROLLER_PORT_1);
-    
-    private final Drive drive;
+    CommandXboxController controller = new CommandXboxController(Constants.CONTROLLER_PORT);
+    ArmIOTalonSRX io = new ArmIOTalonSRX(Constants.ARM_ID);
+    Arm Arm = new Arm(io);
+    Drive drive = new Drive();
+    private int[] armPositions;
+
 
     public RobotContainer() {
-        drive = new Drive(
-            new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
-            new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
-        );
+      configureBindings();
+      armPositions = new int[] {90, 180, 50, 0, 45};
+      
 
-        configureBindings();
     }
 
     private void configureBindings() {
+        // joystick controls
         drive.setDefaultCommand(
             new DriveWithJoysticks(
-                drive, 
-                () -> controller.getLeftY(), 
+                drive,
+                () -> controller.getLeftY(),
                 () -> controller.getRightX()
             )
         );
 
-        controller.b().onTrue(new InstantCommand(() -> drive.setVoltage(Volts.of(8), Volts.of(8))));
+        controller.x().onTrue(new InstantCommand(() -> Arm.setPosition(Degrees.of(armPositions[1]))));
+        
     }
 }
