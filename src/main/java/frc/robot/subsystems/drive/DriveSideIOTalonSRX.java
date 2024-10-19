@@ -9,6 +9,7 @@ import edu.wpi.first.units.*;
 
 public class DriveSideIOTalonSRX implements DriveSideIO {
     private final TalonSRX motor1, motor2;
+    int encoderTicks = 1;
     
     public DriveSideIOTalonSRX(int id1, int id2, boolean isInverted){
         motor1 = new TalonSRX(id1);
@@ -36,7 +37,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
 
     @Override
     public void setVelocity(Measure<Velocity<Angle>> velocity){
-        motor1.set(TalonSRXControlMode.Velocity, velocity.in(RadiansPerSecond)); // ! check if rps is the correct unit
+        motor1.set(TalonSRXControlMode.Velocity, velocity.in(RotationsPerSecond) * 0.1 * encoderTicks);
     }
 
     @Override
