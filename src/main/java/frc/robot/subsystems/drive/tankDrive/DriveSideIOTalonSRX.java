@@ -10,7 +10,7 @@ import edu.wpi.first.units.*;
 public class DriveSideIOTalonSRX implements DriveSideIO {
     private final TalonSRX motor1, motor2;
     
-    public DriveSideIOTalonSRX(int id1, int id2){
+    public DriveSideIOTalonSRX(int id1, int id2, boolean isInverted){
         motor1 = new TalonSRX(id1);
         motor2 = new TalonSRX(id2);
 
@@ -22,8 +22,8 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
 		motor1.config_kD(0, 0, 0);
         motor1.config_kF(0, 0, 0);
 
-        motor1.setInverted(false);
-        motor1.setSensorPhase(true);
+        motor1.setInverted(isInverted);
+        motor1.setSensorPhase(true); // ! keep in mind
         motor1.setSelectedSensorPosition(motor1.getSensorCollection().getPulseWidthPosition(), 0, 0);
 
         motor2.follow(motor1); // ! check if any config needs to be done to motor2, also check if this should go in setVelocity instead
@@ -40,7 +40,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     }
 
     @Override
-    public void updateInputs(MotorIOInputs inputs) {
+    public void updateInputs(DriveSideIOInputs inputs) {
         inputs.motor1Current = motor2.getStatorCurrent();
         inputs.motor1Voltage = motor2.getMotorOutputVoltage();
         inputs.motor1Position = motor2.getSelectedSensorPosition();

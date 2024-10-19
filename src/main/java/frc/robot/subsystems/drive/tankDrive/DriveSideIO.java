@@ -5,7 +5,7 @@ import edu.wpi.first.units.*;
 
 public interface DriveSideIO {
     @AutoLog
-    public static class MotorIOInputs {
+    public static class DriveSideIOInputs {
         public double motor1Current;
         public double motor1Voltage;
         public double motor1Position;
@@ -23,5 +23,5 @@ public interface DriveSideIO {
 
     public default void setVelocity(Measure<Velocity<Angle>> velocity) {}
 
-    public default void updateInputs(MotorIOInputs inputs) {}
+    public default void updateInputs(DriveSideIOInputs inputs) {}
 }
