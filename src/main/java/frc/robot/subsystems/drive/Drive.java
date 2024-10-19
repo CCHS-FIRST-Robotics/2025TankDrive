@@ -36,8 +36,8 @@ public class Drive extends SubsystemBase{
     public void setVelocity(ChassisSpeeds speeds){
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
-        double leftRadiansPerSecond = wheelSpeeds.leftMetersPerSecond / (2 * Math.PI * Constants.WHEEL_RADIUS * Constants.GEAR_RATIO);
-        double rightRadiansPerSecond = wheelSpeeds.rightMetersPerSecond / (2 * Math.PI * Constants.WHEEL_RADIUS * Constants.GEAR_RATIO);
+        double leftRadiansPerSecond = wheelSpeeds.leftMetersPerSecond / (Constants.WHEEL_CIRCUMFERENCE * Constants.GEAR_RATIO);
+        double rightRadiansPerSecond = wheelSpeeds.rightMetersPerSecond / (Constants.WHEEL_CIRCUMFERENCE * Constants.GEAR_RATIO);
 
         lIO.setVelocity(RadiansPerSecond.of(leftRadiansPerSecond));
         rIO.setVelocity(RadiansPerSecond.of(rightRadiansPerSecond));
