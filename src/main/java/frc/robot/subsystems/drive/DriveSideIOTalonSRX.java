@@ -9,7 +9,7 @@ import edu.wpi.first.units.*;
 
 public class DriveSideIOTalonSRX implements DriveSideIO {
     private final TalonSRX motor1, motor2;
-    int encoderTicks = 1;
+    int encoderTicks = 4096;
     
     public DriveSideIOTalonSRX(int id1, int id2, boolean isInverted){
         motor1 = new TalonSRX(id1);
