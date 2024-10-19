@@ -20,11 +20,11 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         motor1.config_kP(0, 1, 0);
 		motor1.config_kI(0, 0, 0);
 		motor1.config_kD(0, 0, 0);
-        motor1.config_kF(0, 0, 0);
+        motor1.config_kF(0, 1, 0); // ! should do whatever the docs say
 
         motor1.setInverted(isInverted);
-        motor1.setSensorPhase(true); // ! keep in mind
-        motor1.setSelectedSensorPosition(motor1.getSensorCollection().getPulseWidthPosition(), 0, 0);
+        // motor1.setSensorPhase(true); // ! keep in mind
+        // motor1.setSelectedSensorPosition(motor1.getSensorCollection().getPulseWidthPosition(), 0, 0);
 
         motor2.follow(motor1); // ! check if any config needs to be done to motor2, also check if this should go in setVelocity instead
     }

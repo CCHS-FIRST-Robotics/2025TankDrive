@@ -37,11 +37,9 @@ public class DriveWithJoysticks extends Command{
     }
 
     public double applyPreferences(double input){
-        // add a deadzone
         if(Math.abs(input) < Constants.ANALOG_DEADZONE){
             return 0; 
         }
-
-        return Math.pow(input, 2); // 2 is kinda a magic number
+        return Math.pow(input, 2);
     }
 }
