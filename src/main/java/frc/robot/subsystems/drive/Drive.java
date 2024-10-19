@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Drive;
+package frc.robot.subsystems.drive;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -15,8 +15,8 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import frc.robot.Constants;
+import frc.robot.subsystems.gyro.*;
 
-import frc.robot.subsystems.Motors.*;
 
 
 
@@ -24,8 +24,8 @@ public class Drive extends SubsystemBase {
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
     private final DifferentialDriveOdometry odometry;
     private Pose2d currentPose = new Pose2d(0, 0, new Rotation2d());
-    private final MotorGroupIOSparkSRX Left_io = new MotorGroupIOSparkSRX(Constants.LEFT_ID_1, Constants.LEFT_ID_2, false);
-     private final MotorGroupIOSparkSRX Right_io = new MotorGroupIOSparkSRX(Constants.RIGHT_ID_1, Constants.RIGHT_ID_2, true);
+    private final MotorGroupIOTalonSRX Left_io = new MotorGroupIOTalonSRX(Constants.LEFT_ID_1, Constants.LEFT_ID_2, false);
+     private final MotorGroupIOTalonSRX Right_io = new MotorGroupIOTalonSRX(Constants.RIGHT_ID_1, Constants.RIGHT_ID_2, true);
     private final MotorGroup leftMotors = new MotorGroup(Left_io, "Left Motors");
     private final MotorGroup rightMotors = new MotorGroup(Right_io, "Right Motors");
     private final Gyro NavX = new Gyro(); 
