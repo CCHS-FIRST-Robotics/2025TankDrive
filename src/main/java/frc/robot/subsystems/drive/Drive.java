@@ -1,4 +1,4 @@
-package frc.robot.subsystems.drive.tankDrive;
+package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.*;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.units.*;
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.tankDrive.DriveSideIOInputsAutoLogged;
 
 public class Drive extends SubsystemBase{
     DriveSideIO lIO, rIO;
