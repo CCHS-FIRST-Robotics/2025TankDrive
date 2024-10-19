@@ -37,7 +37,12 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
 
     @Override
     public void setVelocity(Measure<Velocity<Angle>> velocity){
-        motor1.set(TalonSRXControlMode.Velocity, velocity.in(RotationsPerSecond) * 0.1 * encoderTicks);
+        motor1.set( // this function takes in encoder ticks per 0.1 seconds
+            TalonSRXControlMode.Velocity, 
+            velocity.in(RotationsPerSecond) 
+            * encoderTicks
+            * 0.1
+        );
     }
 
     @Override
