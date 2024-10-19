@@ -1,45 +1,97 @@
-package frc.robot.subsystems.drive;
+package frc.robot.subsystems.Drive;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 
 import static edu.wpi.first.units.Units.*;
 
-import edu.wpi.first.wpilibj2.command.*;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
-import org.littletonrobotics.junction.Logger;
-import edu.wpi.first.units.*;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import frc.robot.Constants;
-import frc.robot.subsystems.drive.tankDrive.DriveSideIOInputsAutoLogged;
 
-public class Drive extends SubsystemBase{
-    DriveSideIO lIO, rIO;
-    DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
-    DriveSideIOInputsAutoLogged lInputs, rInputs;
+import frc.robot.subsystems.Motors.*;
 
-    public Drive(DriveSideIO leftIO, DriveSideIO rightIO){
-        this.lIO = leftIO;
-        this.rIO = rightIO;
+
+
+public class Drive extends SubsystemBase {
+    private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
+    private final DifferentialDriveOdometry odometry;
+    private Pose2d currentPose = new Pose2d(0, 0, new Rotation2d());
+    private final MotorGroupIOSparkSRX Left_io = new MotorGroupIOSparkSRX(Constants.LEFT_ID_1, Constants.LEFT_ID_2, false);
+     private final MotorGroupIOSparkSRX Right_io = new MotorGroupIOSparkSRX(Constants.RIGHT_ID_1, Constants.RIGHT_ID_2, true);
+    private final MotorGroup leftMotors = new MotorGroup(Left_io, "Left Motors");
+    private final MotorGroup rightMotors = new MotorGroup(Right_io, "Right Motors");
+    private final Gyro NavX = new Gyro(); 
+
+
+
+   
+
+    public Drive() {
+        odometry = new DifferentialDriveOdometry(NavX.getYaw(), leftMotors.distanceTraveled(), rightMotors.distanceTraveled(), currentPose);
     }
 
-    @Override
-    public void periodic() {
-        lIO.updateInputs(lInputs);
-        rIO.updateInputs(rInputs);
 
-        Logger.processInputs("Left side ", lInputs);
-        Logger.processInputs("Right side ", rInputs);
+
+
+    public Pose2d getPose() {
+        return currentPose;
     }
 
-    public void setVoltage(Measure<Voltage> lVolts, Measure<Voltage> rVolts){
-        lIO.setVoltage(lVolts);
-        rIO.setVoltage(rVolts);
+    public DifferentialDriveKinematics getKinematics(){
+        return kinematics;
     }
+
+
+
+
+ 
+    public Measure<Distance> leftDistanceTraveled(){
+        return leftMotors.distanceTraveled();
+
+}
+
+    public void setVoltage(Measure<Voltage> volts){
+        leftMotors.setVoltage(volts);
+        rightMotors.setVoltage(volts);
+    }
+
 
     public void setVelocity(ChassisSpeeds speeds){
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
-        double leftRadiansPerSecond = wheelSpeeds.leftMetersPerSecond / (Constants.WHEEL_CIRCUMFERENCE * Constants.GEAR_RATIO);
-        double rightRadiansPerSecond = wheelSpeeds.rightMetersPerSecond / (Constants.WHEEL_CIRCUMFERENCE * Constants.GEAR_RATIO);
+        Measure<Velocity<Angle>> leftRadiansPerSecond = RadiansPerSecond.of(wheelSpeeds.leftMetersPerSecond / (Constants.WHEEL_CIRCUMFERENCE.in(Meters) * Constants.GEAR_RATIO));
+        Measure<Velocity<Angle>> rightRadiansPerSecond = RadiansPerSecond.of(wheelSpeeds.rightMetersPerSecond / (Constants.WHEEL_CIRCUMFERENCE.in(Meters) * Constants.GEAR_RATIO));
 
-        lIO.setVelocity(RadiansPerSecond.of(leftRadiansPerSecond));
-        rIO.setVelocity(RadiansPerSecond.of(rightRadiansPerSecond));
+        leftMotors.setVelocity(leftRadiansPerSecond);
+        rightMotors.setVelocity(rightRadiansPerSecond);
     }
+
+    public Measure<Distance> rightDistanceTravled(){
+        return rightMotors.distanceTraveled();
+
+    }
+
+    public void Stop(){
+        leftMotors.setVoltage(Volts.of(0.0));
+        rightMotors.setVoltage(Volts.of(0.0));
+    }
+        
+
+    @Override
+    public void periodic() {
+        currentPose = odometry.update(NavX.getYaw(), leftMotors.distanceTraveled().in(Meters), rightMotors.distanceTraveled().in(Meters));
+        NavX.updateInputs(); 
+       
+    }
+
+
+
 }
