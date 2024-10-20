@@ -7,6 +7,8 @@ package frc.robot;
 public final class Constants {
     public static final double PERIOD = 0.02;
     public static final double ANALOG_DEADZONE = 0.3;
+    public static enum Mode {REAL, SIM, REPLAY}
+    public static final Mode MODE = Mode.SIM;
 
     public static final int CONTROLLER_PORT_1 = 0;
 

@@ -17,10 +17,27 @@ public class RobotContainer {
     private final Drive drive;
 
     public RobotContainer() {
-        drive = new Drive(
-            new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
-            new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
-        );
+        switch(Constants.MODE){
+            case REAL: // 
+                drive = new Drive(
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
+                );
+                break;
+            case SIM: // simulated
+                drive = new Drive(
+                    new DriveSideIOSim(), 
+                    new DriveSideIOSim()
+                );
+                break;
+            default: // replayed
+                drive = new Drive(
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
+                );
+                break;
+        }
+        
 
         configureBindings();
     }

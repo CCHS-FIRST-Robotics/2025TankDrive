@@ -6,6 +6,7 @@ package frc.robot;
 
 import org.littletonrobotics.junction.*;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.*;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends LoggedRobot {
@@ -15,8 +16,15 @@ public class Robot extends LoggedRobot {
     public void robotInit() {
         robotContainer = new RobotContainer();
 
-        Logger.recordMetadata("ProjectName", "2024ElectricalBoard");
-        Logger.addDataReceiver(new NT4Publisher()); // robot must be real
+        if (isReal()) {
+            Logger.addDataReceiver(new NT4Publisher());
+        } else {
+            setUseTiming(false);
+            String logPath = LogFileUtil.findReplayLog();
+            Logger.setReplaySource(new WPILOGReader(logPath));
+            Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        }
+
         Logger.start();
     }
 
