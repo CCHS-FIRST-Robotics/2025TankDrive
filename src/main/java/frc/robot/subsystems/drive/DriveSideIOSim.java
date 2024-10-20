@@ -2,54 +2,58 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-
-import edu.wpi.first.math.system.LinearSystem;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.Constants;
+import edu.wpi.first.math.controller.*;
+import edu.wpi.first.math.system.plant.*;
 import edu.wpi.first.units.*;
+import frc.robot.Constants;
 
 public class DriveSideIOSim implements DriveSideIO {
     private final DCMotorSim motor;
+    private final PIDController PID;
+    private final SimpleMotorFeedforward F;
+    Measure<Voltage> appliedVolts = Volts.of(0);
+    Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
     
     public DriveSideIOSim(){
         motor = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(0, 0), 
+            LinearSystemId.createDCMotorSystem(2.54, 0.27), 
             DCMotor.getCIM(1), // or just divide kA by 2, since kT * torque = volts and kT = kA
             Constants.GEAR_RATIO
         );
+        PID = new PIDController(1, 0, 0);
+        F = new SimpleMotorFeedforward(0, 2.54, 0.27);
     }
     
     @Override
     public void setVoltage(Measure<Voltage> volts) {
-        motor1.set(TalonSRXControlMode.PercentOutput, volts.in(Volts) / 12);
+        motor.setInputVoltage(volts.in(Volts));
+        appliedVolts = volts;
     }
 
     @Override
     public void setVelocity(Measure<Velocity<Angle>> velocity){
-        motor1.set( // this function takes in encoder ticks per 0.1 seconds
-            TalonSRXControlMode.Velocity, 
-            velocity.in(RotationsPerSecond) 
-            * encoderTicks
-            * 0.1
-        );
+        double volts = PID.calculate(motor.getAngularVelocityRPM() / 60, velocity.in(RotationsPerSecond))
+                       + F.calculate(currentSetpoint.in(RotationsPerSecond));
+        
+        this.setVoltage(Volts.of(volts));
+        currentSetpoint = velocity;
     }
 
     @Override
     public void updateInputs(DriveSideIOInputs inputs) {
-        inputs.motor1Current = motor2.getStatorCurrent();
-        inputs.motor1Voltage = motor2.getMotorOutputVoltage();
-        inputs.motor1Position = motor2.getSelectedSensorPosition();
-        inputs.motor1Velocity = motor2.getSelectedSensorVelocity();
-        inputs.motor1Temperature = motor2.getTemperature();
+        motor.update(Constants.PERIOD);
 
-        inputs.motor2Current = motor2.getStatorCurrent();
-        inputs.motor2Voltage = motor2.getMotorOutputVoltage();
-        inputs.motor2Position = motor2.getSelectedSensorPosition();
-        inputs.motor2Velocity = motor2.getSelectedSensorVelocity();
-        inputs.motor2Temperature = motor2.getTemperature();
+        inputs.motor1Current = motor.getCurrentDrawAmps();
+        inputs.motor1Voltage = appliedVolts.in(Volts);
+        inputs.motor1Position = motor.getAngularPositionRotations();
+        inputs.motor1Velocity = motor.getAngularVelocityRPM() / 60;
+        inputs.motor1Temperature = 0;
+
+        inputs.motor2Current = motor.getCurrentDrawAmps();
+        inputs.motor2Voltage = appliedVolts.in(Volts);
+        inputs.motor2Position = motor.getAngularPositionRotations();
+        inputs.motor2Velocity = motor.getAngularVelocityRPM() / 60;
+        inputs.motor2Temperature = 0;
     }
 }

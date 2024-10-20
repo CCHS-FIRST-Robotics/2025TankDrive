@@ -7,7 +7,6 @@ import edu.wpi.first.math.kinematics.*;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.units.*;
 import frc.robot.Constants;
-import frc.robot.subsystems.drive.tankDrive.DriveSideIOInputsAutoLogged;
 
 public class Drive extends SubsystemBase{
     DriveSideIO lIO, rIO;
