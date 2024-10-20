@@ -15,7 +15,7 @@ import edu.wpi.first.units.Voltage;
 
 public interface MotorGroupIO {
     @AutoLog
-    public static class MotorIOInputs {
+    public static class MotorGroupIOInputs {
         public Measure<Current> main_Motor_Current;
         public Measure<Voltage> main_Motor_Voltage;
         public Measure<Angle> main_Motor_Position;
@@ -35,7 +35,7 @@ public interface MotorGroupIO {
     // public default void setPosition(Measure<Angle> degress){
     // }
 
-    public default void updateInputs(MotorIOInputs inputs) {
+    public default void updateInputs(MotorGroupIOInputs inputs) {
     }
 
     public default void setVelocity(Measure<Velocity<Angle>> speed){ //Meters per second

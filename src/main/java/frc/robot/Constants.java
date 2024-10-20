@@ -20,6 +20,7 @@ public final class Constants {
     public static final Measure<Distance> TRACK_WIDTH = Meters.of(0);
     public static final Measure<Distance> WHEEL_DIAMETER = Meters.of(0);
     public static final int CONTROLLER_PORT = 0;
+     public static final int ENCODERTICKS = 4096;
     public static final int LEFT_ID_1 = 0;
     public static final int LEFT_ID_2 = 0;
     public static final int RIGHT_ID_1 = 0;

@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.*;
 
 import org.littletonrobotics.junction.Logger;
 
+
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
@@ -14,7 +15,7 @@ import frc.robot.Constants;
 
 public class MotorGroup {
     private MotorGroupIOTalonSRX io ;
-    private MotorGroupIOInputsAutoLogged inputs = new MotorGroupIOImputsAutoLogged();
+    private MotorIOInputsAutoLogged inputs = new MotorIOInputsAutoLogged();
     String name;
 
     public MotorGroup(MotorGroupIOTalonSRX io, String name) {

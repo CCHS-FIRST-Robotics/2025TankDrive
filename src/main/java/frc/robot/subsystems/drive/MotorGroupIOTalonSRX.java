@@ -76,7 +76,7 @@ public class MotorGroupIOTalonSRX implements MotorGroupIO {
           
 
     @Override
-    public void updateInputs(MotorIOInputs inputs) {
+    public void updateInputs(MotorGroupIOInputs inputs) {
         inputs.main_Motor_Current = Amps.of(main_Motor.getStatorCurrent());
         inputs.main_Motor_Voltage = Volts.of(main_Motor.getBusVoltage());
         inputs.main_Motor_Position = Degrees.of(main_Motor.getSelectedSensorPosition());
