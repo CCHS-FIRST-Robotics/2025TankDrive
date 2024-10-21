@@ -12,20 +12,25 @@ public class DriveSideIOSim implements DriveSideIO {
     private final DCMotorSim motor;
     private final PIDController PID;
     private final SimpleMotorFeedforward F;
+
+    private final double kP = 1;
+    private final double kI = 0;
+    private final double kD = 0;
+    private final double kS = 0;
+    private final double kV = 2.54 / Constants.GEAR_RATIO / 60 * Constants.WHEEL_CIRCUMFERENCE;
+    private final double kA = 0.27 / Constants.GEAR_RATIO / 60 * Constants.WHEEL_CIRCUMFERENCE;
+
     Measure<Voltage> appliedVolts = Volts.of(0);
     Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
     
     public DriveSideIOSim(){
         motor = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem( // volts per RPM
-                2.54 * Constants.GEAR_RATIO * 60 / Constants.WHEEL_CIRCUMFERENCE,
-                0.27 * Constants.GEAR_RATIO * 60 / Constants.WHEEL_CIRCUMFERENCE
-            ), 
+            LinearSystemId.createDCMotorSystem(kV, kA),
             DCMotor.getCIM(1), // or just divide kA by 2, since kT * torque = volts and kT = kA
             Constants.GEAR_RATIO
         );
-        PID = new PIDController(1, 0, 0);
-        F = new SimpleMotorFeedforward(0, 2.54, 0.27);
+        PID = new PIDController(kP, kI, kD);
+        F = new SimpleMotorFeedforward(kS, kV, kA);
     }
     
     @Override
