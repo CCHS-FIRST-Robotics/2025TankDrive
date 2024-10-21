@@ -11,7 +11,8 @@ import frc.robot.Constants;
 public class Drive extends SubsystemBase{
     DriveSideIO lIO, rIO;
     DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
-    DriveSideIOInputsAutoLogged lInputs, rInputs;
+    DriveSideIOInputsAutoLogged lInputs = new DriveSideIOInputsAutoLogged();
+    DriveSideIOInputsAutoLogged rInputs = new DriveSideIOInputsAutoLogged();
 
     public Drive(DriveSideIO leftIO, DriveSideIO rightIO){
         this.lIO = leftIO;
