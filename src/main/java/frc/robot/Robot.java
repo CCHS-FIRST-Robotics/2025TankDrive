@@ -16,13 +16,22 @@ public class Robot extends LoggedRobot {
     public void robotInit() {
         robotContainer = new RobotContainer();
 
-        if (isReal()) {
-            Logger.addDataReceiver(new NT4Publisher());
-        } else {
-            setUseTiming(false);
-            String logPath = LogFileUtil.findReplayLog();
-            Logger.setReplaySource(new WPILOGReader(logPath));
-            Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        Logger.recordMetadata("ProjectName", "2025TankDrive");
+
+        switch (Constants.MODE) {
+            case REAL:
+                Logger.addDataReceiver(new NT4Publisher());
+                break;
+            case SIM:
+                setUseTiming(false);
+                String logPath = LogFileUtil.findReplayLog();
+                Logger.setReplaySource(new WPILOGReader(logPath));
+                Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+                break;
+            case REPLAY:
+                Logger.addDataReceiver(new WPILOGWriter());
+                Logger.addDataReceiver(new NT4Publisher());
+                break;
         }
 
         Logger.start();
