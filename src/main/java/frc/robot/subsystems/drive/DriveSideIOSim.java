@@ -17,7 +17,10 @@ public class DriveSideIOSim implements DriveSideIO {
     
     public DriveSideIOSim(){
         motor = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(2.54, 0.27), 
+            LinearSystemId.createDCMotorSystem( // volts per RPM
+                2.54 * Constants.GEAR_RATIO * 60 / Constants.WHEEL_CIRCUMFERENCE,
+                0.27 * Constants.GEAR_RATIO * 60 / Constants.WHEEL_CIRCUMFERENCE
+            ), 
             DCMotor.getCIM(1), // or just divide kA by 2, since kT * torque = volts and kT = kA
             Constants.GEAR_RATIO
         );

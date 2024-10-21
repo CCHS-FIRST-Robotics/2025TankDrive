@@ -20,18 +20,21 @@ public class RobotContainer {
         switch(Constants.MODE){
             case REAL: // 
                 drive = new Drive(
+                    new GyroIONavX(),
                     new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
                     new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
                 );
                 break;
             case SIM: // simulated
                 drive = new Drive(
+                    new GyroIO(){},
                     new DriveSideIOSim(), 
                     new DriveSideIOSim()
                 );
                 break;
             default: // replayed
                 drive = new Drive(
+                    new GyroIONavX(),
                     new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
                     new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
                 );
@@ -51,6 +54,6 @@ public class RobotContainer {
             )
         );
 
-        // controller.b().onTrue(new InstantCommand(() -> drive.setVoltage(Volts.of(8), Volts.of(8))));
+        controller.b().onTrue(new InstantCommand(() -> drive.setVoltage(Volts.of(8), Volts.of(8))));
     }
 }

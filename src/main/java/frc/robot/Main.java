@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 /**
  * to do: 
  * 
- * check if radianspersecond
  * get constants
  */
 

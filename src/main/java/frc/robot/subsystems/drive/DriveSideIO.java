@@ -1,7 +1,7 @@
 package frc.robot.subsystems.drive;
 
-import org.littletonrobotics.junction.AutoLog;
 import edu.wpi.first.units.*;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface DriveSideIO {
     @AutoLog

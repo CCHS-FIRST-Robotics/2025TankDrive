@@ -9,21 +9,31 @@ import edu.wpi.first.units.*;
 import frc.robot.Constants;
 
 public class Drive extends SubsystemBase{
-    DriveSideIO lIO, rIO;
-    DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
-    DriveSideIOInputsAutoLogged lInputs = new DriveSideIOInputsAutoLogged();
-    DriveSideIOInputsAutoLogged rInputs = new DriveSideIOInputsAutoLogged();
+    private final GyroIO gyroIO;
+    private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
+    
+    private final DriveSideIO lIO, rIO;
+    private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
+    private final DriveSideIOInputsAutoLogged lInputs = new DriveSideIOInputsAutoLogged();
+    private final DriveSideIOInputsAutoLogged rInputs = new DriveSideIOInputsAutoLogged();
 
-    public Drive(DriveSideIO leftIO, DriveSideIO rightIO){
+    public Drive(
+        GyroIO gyroIO, 
+        DriveSideIO leftIO, 
+        DriveSideIO rightIO)
+    {
         this.lIO = leftIO;
         this.rIO = rightIO;
+        this.gyroIO = gyroIO;
     }
 
     @Override
     public void periodic() {
+        gyroIO.updateInputs(gyroInputs);
         lIO.updateInputs(lInputs);
         rIO.updateInputs(rInputs);
 
+        Logger.processInputs("Gyro ", gyroInputs);
         Logger.processInputs("Left side ", lInputs);
         Logger.processInputs("Right side ", rInputs);
     }
@@ -38,7 +48,7 @@ public class Drive extends SubsystemBase{
 
         double leftRadiansPerSecond = wheelSpeeds.leftMetersPerSecond * Constants.GEAR_RATIO / Constants.WHEEL_CIRCUMFERENCE;
         double rightRadiansPerSecond = wheelSpeeds.rightMetersPerSecond * Constants.GEAR_RATIO / Constants.WHEEL_CIRCUMFERENCE;
-
+        
         lIO.setVelocity(RadiansPerSecond.of(leftRadiansPerSecond));
         rIO.setVelocity(RadiansPerSecond.of(rightRadiansPerSecond));
     }
