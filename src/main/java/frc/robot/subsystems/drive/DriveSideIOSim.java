@@ -56,14 +56,14 @@ public class DriveSideIOSim implements DriveSideIO {
 
         inputs.motor1Current = motor.getCurrentDrawAmps();
         inputs.motor1Voltage = appliedVolts.in(Volts);
-        inputs.motor1Position = motor.getAngularPositionRotations();
-        inputs.motor1Velocity = motor.getAngularVelocityRPM() / 60;
+        inputs.motor1Position = motor.getAngularPositionRad();
+        inputs.motor1Velocity = motor.getAngularVelocityRadPerSec();
         inputs.motor1Temperature = 0;
 
         inputs.motor2Current = motor.getCurrentDrawAmps();
         inputs.motor2Voltage = appliedVolts.in(Volts);
-        inputs.motor2Position = motor.getAngularPositionRotations();
-        inputs.motor2Velocity = motor.getAngularVelocityRPM() / 60;
+        inputs.motor2Position = motor.getAngularPositionRad();
+        inputs.motor2Velocity = motor.getAngularVelocityRadPerSec();
         inputs.motor2Temperature = 0;
     }
 }
