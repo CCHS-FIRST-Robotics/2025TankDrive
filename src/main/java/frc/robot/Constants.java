@@ -18,7 +18,7 @@ public final class Constants {
     public static final int TALONSRX_ID_4 = 0;
 
     public static final double TRACK_WIDTH = 5;
-    public static final double WHEEL_RADIUS = 1;
+    public static final double WHEEL_RADIUS = 2;
     public static final double WHEEL_CIRCUMFERENCE = 2 * Math.PI * WHEEL_RADIUS;
     public static final double GEAR_RATIO = 6;
     public static final double MAX_SPEED = 1;

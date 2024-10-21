@@ -27,7 +27,6 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
 
         motor1.setInverted(isInverted);
         // motor1.setSensorPhase(true); // ! keep in mind
-        // motor1.setSelectedSensorPosition(motor1.getSensorCollection().getPulseWidthPosition(), 0, 0);
 
         motor2.follow(motor1);
     }
