@@ -6,6 +6,8 @@ import org.littletonrobotics.junction.AutoLog;
 public interface DriveSideIO {
     @AutoLog
     public static class DriveSideIOInputs {
+        public double currentSetpoint;
+        
         public double motor1Current;
         public double motor1Voltage;
         public double motor1Position;

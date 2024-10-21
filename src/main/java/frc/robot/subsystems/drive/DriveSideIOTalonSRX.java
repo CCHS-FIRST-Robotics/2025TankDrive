@@ -10,6 +10,8 @@ import edu.wpi.first.units.*;
 public class DriveSideIOTalonSRX implements DriveSideIO {
     private final TalonSRX motor1, motor2;
     int encoderTicks = 4096;
+
+    Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
     
     public DriveSideIOTalonSRX(int id1, int id2, boolean isInverted){
         motor1 = new TalonSRX(id1);
@@ -39,14 +41,16 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     public void setVelocity(Measure<Velocity<Angle>> velocity){
         motor1.set( // this function takes in encoder ticks per 0.1 seconds
             TalonSRXControlMode.Velocity, 
-            velocity.in(RotationsPerSecond) 
-            * encoderTicks
-            * 0.1
+            velocity.in(RotationsPerSecond) * encoderTicks * 0.1
         );
+
+        currentSetpoint = velocity;
     }
 
     @Override
     public void updateInputs(DriveSideIOInputs inputs) {
+        inputs.currentSetpoint = currentSetpoint.in(RotationsPerSecond) * encoderTicks * 0.1;
+
         inputs.motor1Current = motor1.getStatorCurrent();
         inputs.motor1Voltage = motor1.getMotorOutputVoltage();
         inputs.motor1Position = motor1.getSelectedSensorPosition();
