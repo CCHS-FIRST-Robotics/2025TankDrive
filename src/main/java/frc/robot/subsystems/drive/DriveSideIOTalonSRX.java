@@ -11,7 +11,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     private final TalonSRX motor1, motor2;
     int encoderTicks = 4096;
 
-    private final double kP = 1;
+    private final double kP = 0;
     private final double kI = 0;
     private final double kD = 0;
     private final double kF = 1; // ! what is kF (it might be kV)
@@ -31,9 +31,10 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         motor1.config_kF(0, kF, 0);
 
         motor1.setInverted(isInverted);
-        // motor1.setSensorPhase(true); // ! keep in mind
+        // motor1.setSensorPhase(sensorPhase1); // ! keep in mind
 
         motor2.follow(motor1);
+        // motor1.setSensorPhase(sensorPhase2); // ! keep in mind
     }
     
     @Override
@@ -49,6 +50,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         );
 
         currentSetpoint = velocity;
+        // System.out.println(currentSetpoint.in(RotationsPerSecond));
     }
 
     @Override
