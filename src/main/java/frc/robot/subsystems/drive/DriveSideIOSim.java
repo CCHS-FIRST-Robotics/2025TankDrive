@@ -13,7 +13,7 @@ public class DriveSideIOSim implements DriveSideIO {
     private final PIDController PID;
     private final SimpleMotorFeedforward F;
 
-    private final double kP = 1;
+    private final double kP = 10;
     private final double kI = 0;
     private final double kD = 0;
     private final double kS = 0;

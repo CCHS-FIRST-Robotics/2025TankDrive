@@ -9,10 +9,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 /**
  * to do: 
  * 
- * get constants
- * get which side is inverted
- * ! make sure mode isn't sim
- * 
  * standardize logged units for everything
  */
 
