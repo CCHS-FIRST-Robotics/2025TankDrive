@@ -22,7 +22,7 @@ public class RobotContainer {
                 drive = new Drive(
                     new GyroIONavX(),
                     new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
-                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, false)
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
                 );
                 break;
             case SIM: // simulated
@@ -36,7 +36,7 @@ public class RobotContainer {
                 drive = new Drive(
                     new GyroIONavX(),
                     new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
-                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, false)
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
                 );
                 break;
         }
