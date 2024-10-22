@@ -31,7 +31,7 @@ public class Drive extends SubsystemBase{
         this.gyroIO = gyroIO;
         this.odometry = new DifferentialDriveOdometry(
             gyroInputs.rotation2D,
-            lInputs.motor1Position, 
+            lInputs.motor1Position,
             rInputs.motor1Position,
             new Pose2d(0, 0, new Rotation2d())
         );
@@ -43,9 +43,9 @@ public class Drive extends SubsystemBase{
         lIO.updateInputs(lInputs);
         rIO.updateInputs(rInputs);
         robotPose2d = odometry.update(
-            gyroInputs.rotation2D,
+            gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),
             lInputs.motor1Position, 
-            rInputs.motor1Position
+            rInputs.motor1Position // ! not meters lol
         );
 
         Logger.processInputs("Gyro ", gyroInputs);
@@ -62,8 +62,8 @@ public class Drive extends SubsystemBase{
     public void setVelocity(ChassisSpeeds speeds){
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
-        double leftRadiansPerSecond = wheelSpeeds.leftMetersPerSecond * Constants.GEAR_RATIO / Constants.WHEEL_CIRCUMFERENCE;
-        double rightRadiansPerSecond = wheelSpeeds.rightMetersPerSecond * Constants.GEAR_RATIO / Constants.WHEEL_CIRCUMFERENCE;
+        double leftRadiansPerSecond = wheelSpeeds.leftMetersPerSecond * Constants.MAX_SPEED * Constants.GEAR_RATIO / Constants.WHEEL_CIRCUMFERENCE;
+        double rightRadiansPerSecond = wheelSpeeds.rightMetersPerSecond * Constants.MAX_SPEED * Constants.GEAR_RATIO / Constants.WHEEL_CIRCUMFERENCE;
         
         lIO.setVelocity(RadiansPerSecond.of(leftRadiansPerSecond));
         rIO.setVelocity(RadiansPerSecond.of(rightRadiansPerSecond));
