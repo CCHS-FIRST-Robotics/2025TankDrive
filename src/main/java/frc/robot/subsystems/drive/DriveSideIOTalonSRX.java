@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import edu.wpi.first.units.*;
 
@@ -33,6 +34,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         motor1.setInverted(isInverted);
 
         motor2.follow(motor1);
+        motor2.setInverted(InvertType.FollowMaster); // ! see if this works
     }
     
     @Override
