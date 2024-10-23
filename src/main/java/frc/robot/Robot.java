@@ -25,10 +25,6 @@ public class Robot extends LoggedRobot {
             case SIM:
                 Logger.addDataReceiver(new WPILOGWriter());
                 Logger.addDataReceiver(new NT4Publisher());
-                // setUseTiming(false);
-                // String logPath = LogFileUtil.findReplayLog();
-                // Logger.setReplaySource(new WPILOGReader(logPath));
-                // Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
                 break;
             case REPLAY:
                 Logger.addDataReceiver(new WPILOGWriter());

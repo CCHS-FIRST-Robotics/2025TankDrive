@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
-
-import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.subsystems.drive.*; 
@@ -18,7 +15,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         switch(Constants.MODE){
-            case REAL: // 
+            case REAL: // real
                 drive = new Drive(
                     new GyroIONavX(),
                     new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 

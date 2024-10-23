@@ -28,7 +28,7 @@ public class DriveWithJoysticks extends Command{
         double rightX = rightXSupplier.get();
 
         ChassisSpeeds speeds = new ChassisSpeeds(
-            -applyPreferences(leftY), // xboxcontroller is so quirky
+            -applyPreferences(leftY), // xboxcontroller is flipped
             0, 
             -applyPreferences(rightX) * 2 // chassisspeeds considers rotating clockwise as positive
         );
