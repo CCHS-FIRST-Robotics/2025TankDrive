@@ -15,7 +15,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     private final double kP = 0;
     private final double kI = 0;
     private final double kD = 0;
-    private final double kF = 1; // ! what is kF (it might be kV)
+    private final double kF = 1; // just kV
 
     Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
     
@@ -50,7 +50,6 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         );
 
         currentSetpoint = velocity;
-        // System.out.println(currentSetpoint.in(RotationsPerSecond));
     }
 
     @Override

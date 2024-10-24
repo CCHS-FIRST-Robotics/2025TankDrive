@@ -45,7 +45,7 @@ public class RobotContainer {
         drive.setDefaultCommand(
             new DriveWithJoysticks(
                 drive, 
-                () -> controller.getLeftY(), 
+                () -> -controller.getLeftY(), // xboxcontroller is flipped
                 () -> controller.getRightX()
             )
         );

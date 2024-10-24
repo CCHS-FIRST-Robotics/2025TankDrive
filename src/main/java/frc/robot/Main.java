@@ -9,6 +9,11 @@ import edu.wpi.first.wpilibj.RobotBase;
 /**
  * to do: 
  * 
+ * check if xbox controller is actually flipped
+ * check if the correct motor config works
+ * check if the gyro is accurately logging
+ * 
+ * add twist support for sim
  * standardize logged units for everything
  */
 

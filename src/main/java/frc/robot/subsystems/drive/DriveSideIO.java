@@ -8,9 +8,9 @@ public interface DriveSideIO {
     public static class DriveSideIOInputs {
         public double currentSetpoint;
         
-        public double motor1Current;
-        public double motor1Voltage;
-        public double motor1Position;
+        public double motor1Current; // amps
+        public double motor1Voltage; // volts
+        public double motor1Position; // rotations
         public double motor1Velocity;
         public double motor1Temperature;
 
