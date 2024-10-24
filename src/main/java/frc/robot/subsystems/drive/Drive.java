@@ -2,6 +2,7 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
+
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,6 +16,10 @@ public class Drive extends SubsystemBase{
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final DifferentialDriveOdometry odometry;
     private Pose2d robotPose2d = new Pose2d();
+    private double leftCumulativeDistance = 0.0;
+    private double rightCumulativeDistance = 0.0;
+
+    
     
     private final DriveSideIO lIO, rIO;
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
@@ -31,9 +36,9 @@ public class Drive extends SubsystemBase{
         this.gyroIO = gyroIO;
         this.odometry = new DifferentialDriveOdometry(
             gyroInputs.rotation2D,
-            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
-            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
-            new Pose2d(0, 0, new Rotation2d())
+            lInputs.motor1Position.in(Rotations),
+            rInputs.motor1Position.in(Rotations),
+            new Pose2d(3, 5, new Rotation2d())
         );
     }
 
@@ -42,17 +47,36 @@ public class Drive extends SubsystemBase{
         gyroIO.updateInputs(gyroInputs);
         lIO.updateInputs(lInputs);
         rIO.updateInputs(rInputs);
+        if (Constants.MODE == Constants.Mode.SIM){
+        double deltaD = rightCumulativeDistance - leftCumulativeDistance;
+        double theta = deltaD / Constants.TRACK_WIDTH;
+        Rotation2d angle = new Rotation2d(theta);
+
+        leftCumulativeDistance += lInputs.currentSetpoint.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE * Constants.PERIOD;
+         rightCumulativeDistance  +=   rInputs.currentSetpoint.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE * Constants.PERIOD;
         robotPose2d = odometry.update(
+            angle,
+            leftCumulativeDistance,
+            rightCumulativeDistance);
+        }
+        if (Constants.MODE == Constants.Mode.REAL){
+            robotPose2d = odometry.update(
             gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),
-            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE, 
-            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE
-        );
+            lInputs.motor1Position.in(Rotations) / Constants.ENCODERTICKS * Constants.WHEEL_CIRCUMFERENCE * Constants.GEAR_RATIO,
+            rInputs.motor1Position.in(Rotations) / Constants.ENCODERTICKS * Constants.WHEEL_CIRCUMFERENCE * Constants.GEAR_RATIO);
+            
+        }
+
+            
+            
 
         Logger.processInputs("Gyro ", gyroInputs);
         Logger.recordOutput("RobotPose2D", robotPose2d);
         Logger.processInputs("Left side ", lInputs);
         Logger.processInputs("Right side ", rInputs);
     }
+
+
 
     public void setVoltage(Measure<Voltage> lVolts, Measure<Voltage> rVolts){
         lIO.setVoltage(lVolts);
