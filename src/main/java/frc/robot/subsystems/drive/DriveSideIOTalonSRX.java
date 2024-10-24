@@ -25,6 +25,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
 
         motor1.configFactoryDefault();
         motor1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        motor1.setSelectedSensorPosition(0);
 
         motor1.config_kP(0, kP, 0);
 		motor1.config_kI(0, kI, 0);
@@ -54,18 +55,12 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
 
     @Override
     public void updateInputs(DriveSideIOInputs inputs) {
-        inputs.currentSetpoint = currentSetpoint.in(RotationsPerSecond) * encoderTicks * 0.1;
+        inputs.currentSetpoint = currentSetpoint;
 
-        inputs.motor1Current = motor1.getStatorCurrent();
-        inputs.motor1Voltage = motor1.getMotorOutputVoltage();
-        inputs.motor1Position = motor1.getSelectedSensorPosition();
-        inputs.motor1Velocity = motor1.getSelectedSensorVelocity();
-        inputs.motor1Temperature = motor1.getTemperature();
-
-        inputs.motor2Current = motor2.getStatorCurrent();
-        inputs.motor2Voltage = motor2.getMotorOutputVoltage();
-        inputs.motor2Position = motor2.getSelectedSensorPosition();
-        inputs.motor2Velocity = motor2.getSelectedSensorVelocity();
-        inputs.motor2Temperature = motor2.getTemperature();
+        inputs.motor1Current = Amps.of(motor1.getStatorCurrent());
+        inputs.motor1Voltage = Volts.of(motor1.getMotorOutputVoltage());
+        inputs.motor1Position = Rotations.of(motor1.getSelectedSensorPosition() / 4096);
+        inputs.motor1Velocity = RotationsPerSecond.of(motor1.getSelectedSensorVelocity() * 10 / 4096);
+        inputs.motor1Temperature = Celsius.of(motor1.getTemperature());
     }
 }

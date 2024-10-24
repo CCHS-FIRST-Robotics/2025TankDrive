@@ -31,8 +31,8 @@ public class Drive extends SubsystemBase{
         this.gyroIO = gyroIO;
         this.odometry = new DifferentialDriveOdometry(
             gyroInputs.rotation2D,
-            lInputs.motor1Position,
-            rInputs.motor1Position,
+            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
+            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
             new Pose2d(0, 0, new Rotation2d())
         );
     }
@@ -44,8 +44,8 @@ public class Drive extends SubsystemBase{
         rIO.updateInputs(rInputs);
         robotPose2d = odometry.update(
             gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),
-            lInputs.motor1Position, 
-            rInputs.motor1Position // ! not meters lol
+            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE, 
+            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE
         );
 
         Logger.processInputs("Gyro ", gyroInputs);

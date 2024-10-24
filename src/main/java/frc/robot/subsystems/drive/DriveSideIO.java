@@ -6,19 +6,13 @@ import org.littletonrobotics.junction.AutoLog;
 public interface DriveSideIO {
     @AutoLog
     public static class DriveSideIOInputs {
-        public double currentSetpoint;
+        public Measure<Velocity<Angle>> currentSetpoint; // rotations per second
         
-        public double motor1Current; // amps
-        public double motor1Voltage; // volts
-        public double motor1Position; // rotations
-        public double motor1Velocity;
-        public double motor1Temperature;
-
-        public double motor2Current;
-        public double motor2Voltage;
-        public double motor2Position;
-        public double motor2Velocity;
-        public double motor2Temperature;
+        public Measure<Current> motor1Current; // amps
+        public Measure<Voltage> motor1Voltage; // volts
+        public Measure<Angle> motor1Position; // rotations
+        public Measure<Velocity<Angle>> motor1Velocity; // rotations per second
+        public Measure<Temperature> motor1Temperature; // celcius
     }
 
     public default void setVoltage(Measure<Voltage> volts) {}

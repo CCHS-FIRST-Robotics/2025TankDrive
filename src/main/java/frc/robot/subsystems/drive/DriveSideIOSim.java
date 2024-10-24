@@ -52,18 +52,12 @@ public class DriveSideIOSim implements DriveSideIO {
     public void updateInputs(DriveSideIOInputs inputs) {
         motor.update(Constants.PERIOD);
 
-        inputs.currentSetpoint = currentSetpoint.in(RadiansPerSecond);
+        inputs.currentSetpoint = currentSetpoint;
 
-        inputs.motor1Current = motor.getCurrentDrawAmps();
-        inputs.motor1Voltage = appliedVolts.in(Volts);
-        inputs.motor1Position = motor.getAngularPositionRad();
-        inputs.motor1Velocity = motor.getAngularVelocityRadPerSec();
-        inputs.motor1Temperature = 0;
-
-        inputs.motor2Current = motor.getCurrentDrawAmps();
-        inputs.motor2Voltage = appliedVolts.in(Volts);
-        inputs.motor2Position = motor.getAngularPositionRad();
-        inputs.motor2Velocity = motor.getAngularVelocityRadPerSec();
-        inputs.motor2Temperature = 0;
+        inputs.motor1Current = Amps.of(motor.getCurrentDrawAmps());
+        inputs.motor1Voltage = Volts.of(appliedVolts.in(Volts));
+        inputs.motor1Position = Rotations.of(motor.getAngularPositionRotations());
+        inputs.motor1Velocity = RotationsPerSecond.of(motor.getAngularVelocityRPM() / 60);
+        inputs.motor1Temperature = Celsius.of(0);
     }
 }
