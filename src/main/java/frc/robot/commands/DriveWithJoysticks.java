@@ -40,6 +40,6 @@ public class DriveWithJoysticks extends Command{
         if(Math.abs(input) < Constants.ANALOG_DEADZONE){
             return 0; 
         }
-        return Math.signum(input) * Math.pow(input, 2) * Constants.MAX_SPEED; // 4 meters per second
+        return Math.signum(input) * Math.pow(Math.abs(input), Constants.JOYSTICK_EXPO) * Constants.MAX_SPEED; // 4 meters per second
     }
 }

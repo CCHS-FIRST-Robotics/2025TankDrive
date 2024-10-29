@@ -6,7 +6,7 @@ package frc.robot;
 
 public final class Constants {
     public static final double PERIOD = 0.02;
-    public static final double ANALOG_DEADZONE = 0.3;
+    public static final double ANALOG_DEADZONE = 0.1;
     public static enum Mode {REAL, SIM, REPLAY}
     public static final Mode MODE = Mode.REAL;
 
@@ -22,4 +22,5 @@ public final class Constants {
     public static final double WHEEL_CIRCUMFERENCE = 2 * Math.PI * WHEEL_RADIUS;
     public static final double GEAR_RATIO = 1;
     public static final double MAX_SPEED = 2;
+    public static final double JOYSTICK_EXPO = 3.5;
 }
