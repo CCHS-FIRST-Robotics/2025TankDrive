@@ -46,7 +46,7 @@ public class DriveWithJoysticks extends Command {
         0.0,
         0.0,
         0.0);
-        targetHeading = new Rotation2d();
+        this.targetHeading = new Rotation2d();
        
 
         
@@ -59,7 +59,7 @@ public void execute() {
     double leftX = leftXSupplier.get(); 
     Rotation2d currentHeading = drive.getHeading();
     if( applyPreferences(leftX) == 0 && applyPreferences(leftY) != 0 &&  !this.piding){
-        setTargetHeading(currentHeading.getDegrees());
+        setTargetHeading(currentHeading.getRadians());
         this.piding = true;
     }
 
@@ -68,7 +68,7 @@ public void execute() {
     }
 
   
-    double headingError = targetHeading.getDegrees() - currentHeading.getRadians();
+    double headingError = this.targetHeading.getRadians() - currentHeading.getRadians();
     double pidOutput = pidController.calculate(headingError);
 
     if(this.piding){
@@ -92,6 +92,7 @@ public void execute() {
     Logger.recordOutput("Raw X output", -applyPreferences(leftX) * 2);
     Logger.recordOutput("mathed X output", -applyPreferences(leftX) * 2 + pidOutput );
     Logger.recordOutput("pid output", pidOutput );
+    Logger.recordOutput("pidding", this.piding );
   
 }
 
@@ -103,8 +104,8 @@ public void execute() {
         return Math.signum(input) * Math.pow(Math.abs(input), Constants.JOYSTICK_EXPONENT) * Constants.MAX_SPEED; // 4 meters per second
     }
 
-    public void setTargetHeading(double headingDegrees) {
-        this.targetHeading = Rotation2d.fromDegrees(headingDegrees);
+    public void setTargetHeading(double headingRadians) {
+        this.targetHeading = Rotation2d.fromRadians(headingRadians);
     }
     
 }
