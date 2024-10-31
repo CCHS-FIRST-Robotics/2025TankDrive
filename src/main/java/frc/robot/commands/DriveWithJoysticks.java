@@ -35,7 +35,7 @@ public class DriveWithJoysticks extends Command {
     
     ) {
         addRequirements(drive);
-        this.Kp = 1.0;
+        this.Kp = .0000001;
         this.Ki = 0.1;
         this.Kd = 0.0;
         this.drive = drive;
@@ -58,17 +58,17 @@ public void execute() {
     double leftY = leftYSupplier.get(); 
     double leftX = leftXSupplier.get(); 
     Rotation2d currentHeading = drive.getHeading();
-    if( leftX == 0 && leftY != 0 &&  !this.piding){
+    if( applyPreferences(leftX) == 0 && applyPreferences(leftY) != 0 &&  !this.piding){
         setTargetHeading(currentHeading.getDegrees());
         this.piding = true;
     }
 
-    if(leftX != 0){
+    if(applyPreferences(leftX) != 0){
         piding = false;
     }
 
   
-    double headingError = targetHeading.getDegrees() - currentHeading.getDegrees();
+    double headingError = targetHeading.getDegrees() - currentHeading.getRadians();
     double pidOutput = pidController.calculate(headingError);
 
     if(this.piding){
@@ -88,9 +88,10 @@ public void execute() {
     }
 
     drive.setVelocity(speeds);
-    Logger.recordOutput("target heading", this.targetHeading.getDegrees());
+    Logger.recordOutput("target heading", this.targetHeading.getRadians());
     Logger.recordOutput("Raw X output", -applyPreferences(leftX) * 2);
     Logger.recordOutput("mathed X output", -applyPreferences(leftX) * 2 + pidOutput );
+    Logger.recordOutput("pid output", pidOutput );
   
 }
 

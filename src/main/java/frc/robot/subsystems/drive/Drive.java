@@ -68,4 +68,8 @@ public class Drive extends SubsystemBase{
         lIO.setVelocity(RadiansPerSecond.of(leftRadiansPerSecond));
         rIO.setVelocity(RadiansPerSecond.of(rightRadiansPerSecond));
     }
+
+    public Rotation2d getHeading(){
+        return gyroInputs.rotation2D;
+    }
 }
