@@ -15,7 +15,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     private final double kP = 0;
     private final double kI = 0;
     private final double kD = 0;
-    private final double kF = 1; // just kV
+    private final double kF = 1; // same as kV
 
     Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
     
@@ -35,7 +35,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         motor1.setInverted(isInverted);
 
         motor2.follow(motor1);
-        motor2.setInverted(InvertType.FollowMaster); // ! see if this works
+        motor2.setInverted(InvertType.FollowMaster); //reverse direction of motor 2 to match motor 1 when going forward and back
     }
     
     @Override
@@ -45,10 +45,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
 
     @Override
     public void setVelocity(Measure<Velocity<Angle>> velocity){
-        motor1.set( // this function takes in encoder ticks per 0.1 seconds
-            TalonSRXControlMode.Velocity, 
-            velocity.in(RotationsPerSecond) * encoderTicks * 0.1
-        );
+        motor1.set(TalonSRXControlMode.Velocity, velocity.in(RotationsPerSecond) * encoderTicks * 0.1); //takes in encoder ticks per 0.1 seconds
 
         currentSetpoint = velocity;
     }
@@ -56,11 +53,9 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     @Override
     public void updateInputs(DriveSideIOInputs inputs) {
         inputs.currentSetpoint = currentSetpoint;
-
         inputs.motor1Current = Amps.of(motor1.getStatorCurrent());
         inputs.motor1Voltage = Volts.of(motor1.getMotorOutputVoltage());
         inputs.motor1Position = Rotations.of(motor1.getSelectedSensorPosition() / 4096);
         inputs.motor1Velocity = RotationsPerSecond.of(motor1.getSelectedSensorVelocity() * 10 / 4096);
-        inputs.motor1Temperature = Celsius.of(motor1.getTemperature());
     }
 }

@@ -21,20 +21,15 @@ public class Drive extends SubsystemBase{
     private final DriveSideIOInputsAutoLogged lInputs = new DriveSideIOInputsAutoLogged();
     private final DriveSideIOInputsAutoLogged rInputs = new DriveSideIOInputsAutoLogged();
 
-    public Drive(
-        GyroIO gyroIO, 
-        DriveSideIO leftIO, 
-        DriveSideIO rightIO)
-    {
+    public Drive(GyroIO gyroIO, DriveSideIO leftIO, DriveSideIO rightIO) {
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
-        this.odometry = new DifferentialDriveOdometry(
-            gyroInputs.rotation2D,
-            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
-            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
-            new Pose2d(0, 0, new Rotation2d())
-        );
+
+        double leftUpdatedPos = lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
+        double rightUpdatedPos = rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
+        
+        this.odometry = new DifferentialDriveOdometry(gyroInputs.rotation2D, leftUpdatedPos, rightUpdatedPos, new Pose2d(0, 0, new Rotation2d()));
     }
 
     @Override
@@ -42,11 +37,11 @@ public class Drive extends SubsystemBase{
         gyroIO.updateInputs(gyroInputs);
         lIO.updateInputs(lInputs);
         rIO.updateInputs(rInputs);
-        robotPose2d = odometry.update(
-            gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),
-            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE, 
-            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE
-        );
+
+        double leftUdatedPos = lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
+        double rightUpdatedPos = rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
+
+        robotPose2d = odometry.update(gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(), leftUdatedPos, rightUpdatedPos);
 
         Logger.processInputs("Gyro ", gyroInputs);
         Logger.recordOutput("RobotPose2D", robotPose2d);

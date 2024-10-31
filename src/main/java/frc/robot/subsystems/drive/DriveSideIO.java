@@ -14,7 +14,6 @@ public interface DriveSideIO {
         public Measure<Voltage> motor1Voltage = Volts.of(0); // volts
         public Measure<Angle> motor1Position = Rotations.of(0); // rotations
         public Measure<Velocity<Angle>> motor1Velocity = RotationsPerSecond.of(0); // rotations per second
-        public Measure<Temperature> motor1Temperature = Celsius.of(0); // celcius
     }
 
     public default void setVoltage(Measure<Voltage> volts) {}

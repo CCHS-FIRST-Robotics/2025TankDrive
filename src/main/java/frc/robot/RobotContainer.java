@@ -1,4 +1,3 @@
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.button.*;
@@ -6,7 +5,7 @@ import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.subsystems.drive.*; 
 
 public class RobotContainer {
-    private final CommandXboxController controller = new CommandXboxController(Constants.CONTROLLER_PORT_1);
+    private final CommandXboxController controller = new CommandXboxController(Constants.CONTROLLER_PORT);
     
     private final Drive drive;
 
@@ -39,12 +38,6 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        drive.setDefaultCommand(
-            new DriveWithJoysticks(
-                drive, 
-                () -> -controller.getLeftY(), // xboxcontroller is flipped
-                () -> controller.getRightX()
-            )
-        );
+        drive.setDefaultCommand(new DriveWithJoysticks(drive, () -> -controller.getLeftY(),() -> controller.getRightX())); // controler throttle flipped
     }
 }
