@@ -6,11 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
-/**
- * to do: 
- * add twist support for sim
- * standardize logged units for everything
- */
+ //TODO: twist (rotation pos updating) in sim
 
 public final class Main {
     private Main() {}

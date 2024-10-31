@@ -1,7 +1,6 @@
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
-
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,9 +25,9 @@ public class Drive extends SubsystemBase{
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
 
-        double leftUpdatedPos = lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
-        double rightUpdatedPos = rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
-        
+        double leftUpdatedPos = 0; //but make sure encoders reset every deploy
+        double rightUpdatedPos = 0; //but make sure encoders reset every deploy
+
         this.odometry = new DifferentialDriveOdometry(gyroInputs.rotation2D, leftUpdatedPos, rightUpdatedPos, new Pose2d(0, 0, new Rotation2d()));
     }
 
@@ -57,10 +56,10 @@ public class Drive extends SubsystemBase{
     public void setVelocity(ChassisSpeeds speeds){
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
-        double leftRadiansPerSecond = wheelSpeeds.leftMetersPerSecond / Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
-        double rightRadiansPerSecond = wheelSpeeds.rightMetersPerSecond / Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
+        double leftRadPerSecond = wheelSpeeds.leftMetersPerSecond / Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
+        double rightRadPerSecond = wheelSpeeds.rightMetersPerSecond / Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
         
-        lIO.setVelocity(RadiansPerSecond.of(leftRadiansPerSecond));
-        rIO.setVelocity(RadiansPerSecond.of(rightRadiansPerSecond));
+        lIO.setVelocity(RadiansPerSecond.of(leftRadPerSecond));
+        rIO.setVelocity(RadiansPerSecond.of(rightRadPerSecond));
     }
 }
