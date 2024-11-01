@@ -75,7 +75,7 @@ public void execute() {
     speeds = new ChassisSpeeds(
         applyPreferences(leftY),
         0, 
-        -applyPreferences(leftX) * 2 + pidOutput 
+        -applyPreferences(leftX) * 2 - pidOutput 
     );
     }
 
