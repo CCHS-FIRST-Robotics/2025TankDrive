@@ -23,6 +23,7 @@ public class DriveWithJoysticks extends Command{
         double leftY = leftYSupplier.get();
         double leftX = leftXSupplier.get();
 
+        //x translation, y translation, rotation
         ChassisSpeeds speeds = new ChassisSpeeds(applyPreferences(leftY), 0, -applyPreferences(leftX) * 2); // chassisspeeds makes clockwise positive
 
         drive.setVelocity(speeds);
@@ -30,7 +31,7 @@ public class DriveWithJoysticks extends Command{
 
     public double applyPreferences(double input){
         double scaledExponential = Math.pow(Math.abs(input), Constants.JOYSTICK_EXPONENT);
-        
+
         if (Math.abs(input) < Constants.ANALOG_DEADZONE){
             return 0; 
         }

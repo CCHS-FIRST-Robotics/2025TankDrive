@@ -1,13 +1,19 @@
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
+
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.units.*;
 import frc.robot.Constants;
+import frc.robot.utils.DriveTrajectory;
+import frc.robot.utils.DriveTrajectoryGenerator;
 
 public class Drive extends SubsystemBase{
     private final GyroIO gyroIO;
@@ -19,6 +25,11 @@ public class Drive extends SubsystemBase{
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
     private final DriveSideIOInputsAutoLogged lInputs = new DriveSideIOInputsAutoLogged();
     private final DriveSideIOInputsAutoLogged rInputs = new DriveSideIOInputsAutoLogged();
+
+    private ArrayList<Pose2d> positionTrajectory = new ArrayList<Pose2d>();
+    private ArrayList<Twist2d> twistTrajectory = new ArrayList<Twist2d>();
+    private int trajectoryCounter = -1;
+    private int currentPathNum = 0;
 
     public Drive(GyroIO gyroIO, DriveSideIO leftIO, DriveSideIO rightIO) {
         this.lIO = leftIO;
@@ -61,5 +72,40 @@ public class Drive extends SubsystemBase{
         
         lIO.setVelocity(RadiansPerSecond.of(leftRadPerSecond));
         rIO.setVelocity(RadiansPerSecond.of(rightRadPerSecond));
+    }
+
+    /* public void runPosition(ArrayList<Pose2d> poseTrajectory, ArrayList<Twist2d> twistTrajectory) {
+        this.positionTrajectory = poseTrajectory;
+        this.twistTrajectory = twistTrajectory;
+        trajectoryCounter = 0;
+    }
+    */
+
+    public void runPosition(DriveTrajectory driveTrajectory) {
+        this.positionTrajectory = driveTrajectory.positionTrajectory;
+        this.twistTrajectory = driveTrajectory.velocityTrajectory;
+        trajectoryCounter = 0;
+    }
+
+    public Command followTrajectory(DriveTrajectory traj) {
+        return runOnce(
+                () -> {
+                    System.out.println("recording pos traj");
+                    Logger.recordOutput("Auto/GeneratedTrajectory",
+                            traj.positionTrajectory.toArray(new Pose2d[traj.positionTrajectory.size()]));
+                    runPosition(traj);
+                });
+    }
+
+    public Command followTrajectory(ArrayList<String> path) {
+        return runOnce(
+                () -> {
+                    DriveTrajectory traj = DriveTrajectoryGenerator.generateChoreoTrajectoryFromFile(path.get(currentPathNum));
+                    System.out.println("recording pos traj");
+                    Logger.recordOutput("Auto/GeneratedTrajectory",
+                            traj.positionTrajectory.toArray(new Pose2d[traj.positionTrajectory.size()]));
+                    currentPathNum++;
+                    runPosition(traj);
+                });
     }
 }
