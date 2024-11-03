@@ -27,7 +27,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         motor1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor1.setSelectedSensorPosition(0);
 
-        motor1.config_kP(0, kP, 0);
+        motor1.config_kP(0, kP, 0); //why all 0 though?
 		motor1.config_kI(0, kI, 0);
 		motor1.config_kD(0, kD, 0);
         motor1.config_kF(0, kF, 0);

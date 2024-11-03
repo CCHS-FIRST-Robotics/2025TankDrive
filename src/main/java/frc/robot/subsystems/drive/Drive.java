@@ -74,12 +74,12 @@ public class Drive extends SubsystemBase{
         rIO.setVelocity(RadiansPerSecond.of(rightRadPerSecond));
     }
 
-    /* public void runPosition(ArrayList<Pose2d> poseTrajectory, ArrayList<Twist2d> twistTrajectory) {
+    public void runPosition(ArrayList<Pose2d> poseTrajectory, ArrayList<Twist2d> twistTrajectory) {
         this.positionTrajectory = poseTrajectory;
         this.twistTrajectory = twistTrajectory;
         trajectoryCounter = 0;
     }
-    */
+    
 
     public void runPosition(DriveTrajectory driveTrajectory) {
         this.positionTrajectory = driveTrajectory.positionTrajectory;
