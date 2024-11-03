@@ -15,6 +15,7 @@ public class Drive extends SubsystemBase{
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final DifferentialDriveOdometry odometry;
     private Pose2d robotPose2d = new Pose2d();
+   
     
     private final DriveSideIO lIO, rIO;
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
@@ -29,8 +30,9 @@ public class Drive extends SubsystemBase{
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
+       
         this.odometry = new DifferentialDriveOdometry(
-            gyroInputs.rotation2D,
+            gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),
             lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
             rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
             new Pose2d(0, 0, new Rotation2d())
@@ -42,11 +44,30 @@ public class Drive extends SubsystemBase{
         gyroIO.updateInputs(gyroInputs);
         lIO.updateInputs(lInputs);
         rIO.updateInputs(rInputs);
+        switch (Constants.MODE){
+        case REAL:{
         robotPose2d = odometry.update(
             gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),
             lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE, 
             rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE
         );
+        }
+        case SIM:{
+            double leftMeters = lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
+            double rightMeters = rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
+
+            double averageMeters = (leftMeters + rightMeters) / 2;
+
+            
+            Rotation2d simRotation = new Rotation2d(averageMeters / Constants.TRACK_WIDTH);
+            robotPose2d = odometry.update(
+            simRotation,
+            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE, 
+            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE
+        );
+            
+        }
+    }
 
         Logger.processInputs("Gyro ", gyroInputs);
         Logger.recordOutput("RobotPose2D", robotPose2d);
@@ -58,6 +79,7 @@ public class Drive extends SubsystemBase{
         lIO.setVoltage(lVolts);
         rIO.setVoltage(rVolts);
     }
+
 
     public void setVelocity(ChassisSpeeds speeds){
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);

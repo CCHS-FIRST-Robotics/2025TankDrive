@@ -35,8 +35,8 @@ public class DriveWithJoysticks extends Command {
     
     ) {
         addRequirements(drive);
-        this.Kp = .0000001;
-        this.Ki = 0.1;
+        this.Kp = .001;
+        this.Ki = 0.0;
         this.Kd = 0.0;
         this.drive = drive;
         this.leftYSupplier = leftYSupplier;
