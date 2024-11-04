@@ -46,7 +46,7 @@ public class DriveWithJoysticks extends Command {
         0.0,
         0.0,
         0.0);
-        this.targetHeading = new Rotation2d();
+        this.targetHeading = drive.getHeading();
        
 
         
@@ -59,7 +59,7 @@ public void execute() {
     double leftX = leftXSupplier.get(); 
     Rotation2d currentHeading = drive.getHeading();
     if( applyPreferences(leftX) == 0 && applyPreferences(leftY) != 0 &&  !this.piding){
-        setTargetHeading(currentHeading.getRadians());
+        this.targetHeading = drive.getHeading();
         this.piding = true;
     }
 
@@ -68,8 +68,8 @@ public void execute() {
     }
 
   
-    double headingError = this.targetHeading.getRadians() - currentHeading.getRadians();
-    double pidOutput = pidController.calculate(headingError);
+    double headingErrorRadians = this.targetHeading.getRadians() - currentHeading.getRadians();
+    double pidOutput = pidController.calculate(headingErrorRadians);
 
     if(this.piding){
     speeds = new ChassisSpeeds(
@@ -88,7 +88,8 @@ public void execute() {
     }
 
     drive.setVelocity(speeds);
-    Logger.recordOutput("target heading", this.targetHeading.getRadians());
+    Logger.recordOutput("target heading rads", this.targetHeading.getRadians());
+    Logger.recordOutput("target heading rotation", this.targetHeading);
     Logger.recordOutput("Raw X output", -applyPreferences(leftX) * 2);
     Logger.recordOutput("mathed X output", -applyPreferences(leftX) * 2 + pidOutput );
     Logger.recordOutput("pid output", pidOutput );
