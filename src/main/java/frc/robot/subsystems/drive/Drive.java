@@ -67,6 +67,8 @@ public class Drive extends SubsystemBase{
         );
             
         }
+            default:
+                break;
     }
 
         Logger.processInputs("Gyro ", gyroInputs);
