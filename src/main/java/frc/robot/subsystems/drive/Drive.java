@@ -27,7 +27,6 @@ public class Drive extends SubsystemBase{
     private final DriveSideIOInputsAutoLogged rInputs = new DriveSideIOInputsAutoLogged();
 
     private ArrayList<Pose2d> positionTrajectory = new ArrayList<Pose2d>();
-    private ArrayList<Twist2d> twistTrajectory = new ArrayList<Twist2d>();
     private int trajectoryCounter = -1;
     private int currentPathNum = 0;
 
@@ -57,6 +56,7 @@ public class Drive extends SubsystemBase{
         Logger.recordOutput("RobotPose2D", robotPose2d);
         Logger.processInputs("Left side ", lInputs);
         Logger.processInputs("Right side ", rInputs);
+      
     }
 
     public void setVoltage(Measure<Voltage> lVolts, Measure<Voltage> rVolts){
@@ -76,14 +76,12 @@ public class Drive extends SubsystemBase{
 
     public void runPosition(ArrayList<Pose2d> poseTrajectory, ArrayList<Twist2d> twistTrajectory) {
         this.positionTrajectory = poseTrajectory;
-        this.twistTrajectory = twistTrajectory;
         trajectoryCounter = 0;
     }
     
 
     public void runPosition(DriveTrajectory driveTrajectory) {
         this.positionTrajectory = driveTrajectory.positionTrajectory;
-        this.twistTrajectory = driveTrajectory.velocityTrajectory;
         trajectoryCounter = 0;
     }
 

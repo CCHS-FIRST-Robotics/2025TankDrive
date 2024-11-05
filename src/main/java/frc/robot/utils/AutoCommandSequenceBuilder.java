@@ -3,7 +3,6 @@ package frc.robot.utils;
 import java.util.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.math.Pair;
 import com.choreo.lib.*;
 import frc.robot.commands.AutoCommand;
@@ -18,7 +17,7 @@ public final class AutoCommandSequenceBuilder {
     public AutoCommandSequenceBuilder(ArrayList<String> pathList, Drive drive) {
         this.drive = drive;
 
-        // append one AutoCommand per path section to the sequence
+        //add a AutoCommand per path section to the sequence
         for (String path : pathList) {
             addCommand(path);
         }

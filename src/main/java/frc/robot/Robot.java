@@ -7,10 +7,13 @@ package frc.robot;
 import org.littletonrobotics.junction.*;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.*;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends LoggedRobot {
     RobotContainer robotContainer;
+    Command autonomousCommand;
 
     @Override
     public void robotInit() {
@@ -47,7 +50,13 @@ public class Robot extends LoggedRobot {
     public void disabledPeriodic() {}
 
     @Override
-    public void autonomousInit() {}
+    public void autonomousInit() {
+        autonomousCommand = robotContainer.getAutonomousCommand();
+
+        if (autonomousCommand != null) {
+            autonomousCommand.schedule();
+        }
+    }
 
     @Override
     public void autonomousPeriodic() {}
