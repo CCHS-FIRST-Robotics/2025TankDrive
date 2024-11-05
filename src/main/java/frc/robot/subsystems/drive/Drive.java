@@ -32,7 +32,7 @@ public class Drive extends SubsystemBase{
         this.gyroIO = gyroIO;
        
         this.odometry = new DifferentialDriveOdometry(
-            gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),
+            gyroInputs.connected ? new Rotation2d(gyroInputs.heading): new Rotation2d(),
             lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
             rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
             new Pose2d(0, 0, new Rotation2d())
@@ -47,7 +47,7 @@ public class Drive extends SubsystemBase{
         switch (Constants.MODE){
         case REAL:{
         robotPose2d = odometry.update(
-            gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),
+            gyroInputs.connected ? new Rotation2d(gyroInputs.heading): new Rotation2d(),
             lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE, 
             rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE
         );
@@ -93,7 +93,7 @@ public class Drive extends SubsystemBase{
         rIO.setVelocity(RadiansPerSecond.of(rightRadiansPerSecond));
     }
 
-    public Rotation2d getHeading(){
-        return gyroInputs.rotation2D;
+    public double getHeading(){
+        return gyroInputs.heading;
     }
 }
