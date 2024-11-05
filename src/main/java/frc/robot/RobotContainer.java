@@ -2,10 +2,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.*;
-import frc.robot.Constants.AutoPathConstants;
+//import frc.robot.Constants.AutoPathConstants;
 import frc.robot.commands.DriveWithJoysticks;
+import frc.robot.commands.MoveForwardCommand;
 import frc.robot.subsystems.drive.*;
-import frc.robot.utils.AutoCommandSequenceBuilder; 
+//import frc.robot.utils.AutoCommandSequenceBuilder; 
 
 public class RobotContainer {
     private final CommandXboxController controller = new CommandXboxController(Constants.CONTROLLER_PORT);
@@ -45,6 +46,6 @@ public class RobotContainer {
     }
 
      public Command getAutonomousCommand() {
-        return new AutoCommandSequenceBuilder(AutoPathConstants.twoStraight, drive).getAutoCommandSequence();
+        return new MoveForwardCommand(drive);
     }
 }
