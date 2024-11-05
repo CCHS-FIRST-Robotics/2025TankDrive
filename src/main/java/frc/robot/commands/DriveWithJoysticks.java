@@ -64,7 +64,7 @@ public void execute() {
         this.piding = true;
     }
 
-    if(applyPreferences(leftX) != 0){
+    if(applyPreferences(leftX) != 0 || applyPreferences(leftY) == 0){
         piding = false;
     }
 
