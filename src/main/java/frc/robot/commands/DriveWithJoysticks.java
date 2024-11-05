@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.Constants;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class DriveWithJoysticks extends Command {
@@ -26,6 +27,7 @@ public class DriveWithJoysticks extends Command {
     ChassisSpeeds speeds;
     private final PIDController pidController;
     Rotation2d targetHeading;
+    SlewRateLimiter filter;
 
 
     public DriveWithJoysticks(
@@ -47,10 +49,9 @@ public class DriveWithJoysticks extends Command {
         0.0,
         0.0);
         this.targetHeading = drive.getHeading();
-       
-
-        
         this.pidController = new PIDController(Kp, Ki, Kd);
+        filter = new SlewRateLimiter(0.5);
+
     }
 
     @Override
@@ -81,9 +82,9 @@ public void execute() {
 
     else{
     speeds = new ChassisSpeeds(
-        applyPreferences(leftY),
+        filter.calculate(applyPreferences(leftY)),
         0, 
-        -applyPreferences(leftX) * 2 
+        filter.calculate(-applyPreferences(leftX) * 2) 
     );
     }
 
