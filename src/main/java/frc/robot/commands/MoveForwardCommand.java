@@ -8,6 +8,8 @@ import frc.robot.subsystems.drive.Drive;
 
 public class MoveForwardCommand extends Command {
     private final Drive drive;
+
+    int totalRotations = 5;
     
 
     public MoveForwardCommand(Drive drive) {
@@ -26,6 +28,10 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return drive.getLeftEncoderRotations().in(Rotations)>3 || drive.getRightEncoderRotations().in(Rotations)>3;
+        System.out.println(drive.getLeftEncoderRotations().in(Rotations));
+        System.out.println(-drive.getRightEncoderRotations().in(Rotations));
+     
+        return drive.getLeftEncoderRotations().in(Rotations) > totalRotations || 
+            -drive.getRightEncoderRotations().in(Rotations) > totalRotations;
     }
 }
