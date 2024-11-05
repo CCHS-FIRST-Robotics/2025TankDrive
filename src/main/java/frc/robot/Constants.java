@@ -32,13 +32,11 @@ public final class Constants {
 
         // file names for paths
         public static final String TWO_STRAIGHT_1 = "Forward1Meter";
-        public static final String TWO_STRAIGHT_2 = "2Straight.2";
 
         public static final double MAX_MOVE_TIME = 1.0;
 
         static {
             twoStraight.add(TWO_STRAIGHT_1);
-            twoStraight.add(TWO_STRAIGHT_2);
         }
     }
 }
