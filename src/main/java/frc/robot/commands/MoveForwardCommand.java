@@ -20,7 +20,7 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(3, 0, 0));
+        drive.setVelocity(new ChassisSpeeds(1, 0, 0));
 
     }
 
