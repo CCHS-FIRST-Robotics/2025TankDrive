@@ -7,28 +7,39 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.units.*;
 import frc.robot.Constants;
-import frc.robot.utils.DriveTrajectory;
-import frc.robot.utils.DriveTrajectoryGenerator;
+//import frc.robot.utils.DriveTrajectory;
+//import frc.robot.utils.DriveTrajectoryGenerator;
+//import edu.wpi.first.math.geometry.Twist2d;
 
 public class Drive extends SubsystemBase{
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final DifferentialDriveOdometry odometry;
     private Pose2d robotPose2d = new Pose2d();
+    //CONTROL_MODE controlMode = CONTROL_MODE.DISABLED;
     
-    private final DriveSideIO lIO, rIO;
-    private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
+    public final DriveSideIO lIO, rIO;
+    public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
     private final DriveSideIOInputsAutoLogged lInputs = new DriveSideIOInputsAutoLogged();
     private final DriveSideIOInputsAutoLogged rInputs = new DriveSideIOInputsAutoLogged();
 
-    private ArrayList<Pose2d> positionTrajectory = new ArrayList<Pose2d>();
-    private int trajectoryCounter = -1;
-    private int currentPathNum = 0;
+    //private ArrayList<Pose2d> positionTrajectory = new ArrayList<Pose2d>();
+    //private int trajectoryCounter = -1;
+    //private int currentPathNum = 0;
+
+    /*public enum CONTROL_MODE {
+        DISABLED,
+        MODULE_SETPOINT,
+        CHASSIS_SETPOINT,
+        POSITION_SETPOINT,
+        CHARACTERIZING
+    };
+
+    */
 
     public Drive(GyroIO gyroIO, DriveSideIO leftIO, DriveSideIO rightIO) {
         this.lIO = leftIO;
@@ -47,8 +58,8 @@ public class Drive extends SubsystemBase{
         lIO.updateInputs(lInputs);
         rIO.updateInputs(rInputs);
 
-        double leftUdatedPos = lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
-        double rightUpdatedPos = rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
+        double leftUdatedPos = lInputs.motorPosition.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
+        double rightUpdatedPos = rInputs.motorPosition.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
 
         robotPose2d = odometry.update(gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(), leftUdatedPos, rightUpdatedPos);
 
@@ -56,6 +67,13 @@ public class Drive extends SubsystemBase{
         Logger.recordOutput("RobotPose2D", robotPose2d);
         Logger.processInputs("Left side ", lInputs);
         Logger.processInputs("Right side ", rInputs);
+
+        /*switch (controlMode) {
+            case DISABLED:
+                lIO.setVelocity(RotationsPerSecond.of(0));
+                rIO.setVelocity(RotationsPerSecond.of(0));
+        }
+        */
       
     }
 
@@ -74,7 +92,9 @@ public class Drive extends SubsystemBase{
         rIO.setVelocity(RadiansPerSecond.of(rightRadPerSecond));
     }
 
-    public void runPosition(ArrayList<Pose2d> poseTrajectory, ArrayList<Twist2d> twistTrajectory) {
+    
+
+    /*public void runPosition(ArrayList<Pose2d> poseTrajectory, ArrayList<Twist2d> twistTrajectory) {
         this.positionTrajectory = poseTrajectory;
         trajectoryCounter = 0;
     }
@@ -105,5 +125,15 @@ public class Drive extends SubsystemBase{
                     currentPathNum++;
                     runPosition(traj);
                 });
+    }
+    */
+
+
+    public Measure<Angle> getLeftEncoderRotations() {
+        return lInputs.motorPosition;
+    }
+
+    public Measure<Angle> getRightEncoderRotations() {
+        return rInputs.motorPosition;
     }
 }

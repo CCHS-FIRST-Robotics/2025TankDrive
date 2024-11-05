@@ -53,9 +53,9 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     @Override
     public void updateInputs(DriveSideIOInputs inputs) {
         inputs.currentSetpoint = currentSetpoint;
-        inputs.motor1Current = Amps.of(motor1.getStatorCurrent());
-        inputs.motor1Voltage = Volts.of(motor1.getMotorOutputVoltage());
-        inputs.motor1Position = Rotations.of(motor1.getSelectedSensorPosition() / 4096);
-        inputs.motor1Velocity = RotationsPerSecond.of(motor1.getSelectedSensorVelocity() * 10 / 4096);
+        inputs.motorCurrent = Amps.of(motor1.getStatorCurrent());
+        inputs.motorVoltage = Volts.of(motor1.getMotorOutputVoltage());
+        inputs.motorPosition = Rotations.of(motor1.getSelectedSensorPosition() / 4096);
+        inputs.motorVelocity = RotationsPerSecond.of(motor1.getSelectedSensorVelocity() * 10 / 4096);
     }
 }

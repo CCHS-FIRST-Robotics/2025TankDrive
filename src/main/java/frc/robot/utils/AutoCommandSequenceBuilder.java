@@ -32,7 +32,7 @@ public final class AutoCommandSequenceBuilder {
         double totalTime = driveTime;
 
         // drive to the next waypoint
-        events.add(Pair.of(0.0, drive.followTrajectory(DriveTrajectoryGenerator.generateChoreoTrajectoryFromFile(path))));
+        //events.add(Pair.of(0.0, drive.followTrajectory(DriveTrajectoryGenerator.generateChoreoTrajectoryFromFile(path))));
         
 
         // append to the command sequence
