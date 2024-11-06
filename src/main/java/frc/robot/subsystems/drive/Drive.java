@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
@@ -10,13 +11,16 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.units.*;
 import frc.robot.Constants;
 
+
 public class Drive extends SubsystemBase{
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final DifferentialDriveOdometry odometry;
     private Pose2d robotPose2d = new Pose2d();
-   
-    
+    double turn_Kp;
+    double turn_Ki;
+    double turn_Kd;
+    private final PIDController turn_pidController;
     private final DriveSideIO lIO, rIO;
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
     private final DriveSideIOInputsAutoLogged lInputs = new DriveSideIOInputsAutoLogged();
@@ -30,12 +34,18 @@ public class Drive extends SubsystemBase{
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
+        this.turn_Kp = .08;
+        this.turn_Ki = 0.0;
+        this.turn_Kd = 0.01;
+        this.turn_pidController = new PIDController(turn_Kp, turn_Ki, turn_Kd);
        
         this.odometry = new DifferentialDriveOdometry(
             gyroInputs.connected ? new Rotation2d(gyroInputs.heading): new Rotation2d(),
             lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
             rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
             new Pose2d(0, 0, new Rotation2d())
+           
+
         );
     }
 
@@ -80,6 +90,29 @@ public class Drive extends SubsystemBase{
     public void setVoltage(Measure<Voltage> lVolts, Measure<Voltage> rVolts){
         lIO.setVoltage(lVolts);
         rIO.setVoltage(rVolts);
+    }
+
+
+    public boolean goForward(Measure<Angle> angle, Measure<Velocity<Distance>> Mps, Measure<Distance> distance){
+        double rotations = (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE);
+        if ((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2 >= rotations) {
+            return true;
+        }
+        else{
+        double current_Angle = gyroInputs.heading;
+        double err = angle.in(Degrees) - current_Angle;
+        double pidOutput = turn_pidController.calculate(err);
+
+        ChassisSpeeds speeds = new ChassisSpeeds(
+            Mps.in(MetersPerSecond),
+            0, 
+            pidOutput 
+        );
+        setVelocity(speeds);
+        return false;
+        }
+
+
     }
 
 

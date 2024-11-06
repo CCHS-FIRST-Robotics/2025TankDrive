@@ -4,8 +4,14 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.DriveWithJoysticks;
+import frc.robot.commands.MoveForwardCommand;
 import frc.robot.subsystems.drive.*; 
 
 public class RobotContainer {
@@ -39,6 +45,9 @@ public class RobotContainer {
         }
 
         configureBindings();
+    }
+   public Command getAutonomousCommand() {
+        return new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(1), Meters.of(2));
     }
 
     private void configureBindings() {
