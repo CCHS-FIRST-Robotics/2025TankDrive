@@ -46,9 +46,7 @@ public class RobotContainer {
 
         configureBindings();
     }
-   public Command getAutonomousCommand() {
-        return new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(1), Meters.of(2));
-    }
+   
 
     private void configureBindings() {
         drive.setDefaultCommand(
@@ -58,5 +56,9 @@ public class RobotContainer {
                 () -> controller.getRightX()
             )
         );
+    }
+
+    public Command getAutonomousCommand() {
+        return new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(1), Meters.of(1));
     }
 }

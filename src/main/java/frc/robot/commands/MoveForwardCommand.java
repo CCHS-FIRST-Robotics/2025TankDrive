@@ -13,11 +13,16 @@ public class MoveForwardCommand extends Command {
     private final Drive drive;
     Measure<Angle> angle;
     Measure<Velocity<Distance>> Mps;
-     Measure<Distance> distance;
-     boolean finished;
+    Measure<Distance> distance;
+    boolean finished;
     
 
-    public MoveForwardCommand(Drive drive, Measure<Angle> angle, Measure<Velocity<Distance>> Mps, Measure<Distance> distance ) {
+    public MoveForwardCommand(
+        Drive drive, 
+        Measure<Angle> angle, 
+        Measure<Velocity<Distance>> Mps, 
+        Measure<Distance> distance) {
+
         this.drive = drive;
         this.angle = angle;
         this.Mps = Mps;
@@ -32,13 +37,12 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void execute() {
-    finished = drive.goForward(angle,Mps,distance);
 
     }
 
     @Override
     public boolean isFinished() {
-        return finished;
+        return drive.goForward(angle, Mps, distance);
      
     }
 }

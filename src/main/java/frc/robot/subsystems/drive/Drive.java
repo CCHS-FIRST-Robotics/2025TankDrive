@@ -99,8 +99,8 @@ public class Drive extends SubsystemBase{
             return true;
         }
         else{
-        double current_Angle = gyroInputs.heading;
-        double err = angle.in(Degrees) - current_Angle;
+        double current_Angle = gyroInputs.heading * (Math.PI/180); 
+        double err = angle.in(Radians) - current_Angle;
         double pidOutput = turn_pidController.calculate(err);
 
         ChassisSpeeds speeds = new ChassisSpeeds(
@@ -109,6 +109,9 @@ public class Drive extends SubsystemBase{
             pidOutput 
         );
         setVelocity(speeds);
+        Logger.recordOutput("drive/err", err);
+        Logger.recordOutput("drive/pid output", pidOutput );
+        Logger.recordOutput("drive/speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE);
         return false;
         }
 
