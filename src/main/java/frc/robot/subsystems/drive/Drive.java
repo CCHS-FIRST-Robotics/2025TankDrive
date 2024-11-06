@@ -118,6 +118,34 @@ public class Drive extends SubsystemBase{
 
     }
 
+    public boolean goToPositsion(Measure<Distance> x, Measure<Distance> y, Measure<Velocity<Distance>> Mps){
+        double targetX = x.in(Meters);
+        double targetY = y.in(Meters);
+        double currentX = robotPose2d.getX();
+        double currentY = robotPose2d.getY();
+        double Xmovment = targetX - currentX;
+        double Ymovement = targetY - currentY;
+        double targetTheta = Math.atan2(Ymovement, Xmovment);
+        double currentTheta = getHeading();
+        double ThetaMovement = targetTheta - currentTheta;
+        double distance = Math.sqrt(Math.pow(Xmovment, 2) + Math.pow(Ymovement, 2));
+        if ((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2 >= (distance / Constants.WHEEL_CIRCUMFERENCE)) {
+            return true;
+        }
+        double pidOutput = turn_pidController.calculate(ThetaMovement);
+        ChassisSpeeds speeds = new ChassisSpeeds(
+            Mps.in(MetersPerSecond),
+            0, 
+            pidOutput);
+        setVelocity(speeds);
+        Logger.recordOutput("drive/err", distance);
+        Logger.recordOutput("drive/pid output", pidOutput );
+        Logger.recordOutput("drive/speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE);
+        Logger.recordOutput("drive/Distance", distance);
+        return false;
+    }
+    
+
 
     public void setVelocity(ChassisSpeeds speeds){
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);

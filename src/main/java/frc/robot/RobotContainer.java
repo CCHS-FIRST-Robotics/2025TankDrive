@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.MoveForwardCommand;
+import frc.robot.commands.MoveTo;
 import frc.robot.subsystems.drive.*; 
 
 public class RobotContainer {
@@ -59,6 +60,8 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+        //Test these tmr
         return new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(1), Meters.of(1));
+        //return new MoveTo(drive, Meters.of(3), Meters.of(2), MetersPerSecond.of(1));
     }
 }
