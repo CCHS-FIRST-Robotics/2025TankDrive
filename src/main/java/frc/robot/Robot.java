@@ -7,14 +7,19 @@ package frc.robot;
 import org.littletonrobotics.junction.*;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.*;
+
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends LoggedRobot {
     RobotContainer robotContainer;
+    double count;
 
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
+        count = 0;
+
 
         Logger.recordMetadata("ProjectName", "2025TankDrive");
 
@@ -38,6 +43,18 @@ public class Robot extends LoggedRobot {
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
+        double volts = RobotController.getBatteryVoltage();
+        if(volts <= 11.5){
+            count++;
+        }
+        if (volts >= 11.5){
+            count = 0;
+        }
+        if(count >= 50){
+            System.out.print((char)7);
+        }
+        
+
     }
 
     @Override
