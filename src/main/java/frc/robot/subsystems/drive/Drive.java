@@ -34,7 +34,7 @@ public class Drive extends SubsystemBase{
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
-        this.turn_Kp = 1;
+        this.turn_Kp = .5;
         this.turn_Ki = 0.0;
         this.turn_Kd = 0.01;
         this.turn_pidController = new PIDController(turn_Kp, turn_Ki, turn_Kd);
@@ -96,7 +96,7 @@ public class Drive extends SubsystemBase{
     public boolean goForward(Measure<Angle> angle, Measure<Velocity<Distance>> Mps, Measure<Distance> distance){
        
         double rotations = (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE);
-        if ((-(lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) >= rotations) {
+        if (-((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) >= rotations) {
             return true;
         }
         else{
@@ -115,7 +115,7 @@ public class Drive extends SubsystemBase{
         Logger.recordOutput("drive/err", err);
         Logger.recordOutput("drive/pid output", pidOutput );
         Logger.recordOutput("drive/rotastions", rotations );
-        Logger.recordOutput("drive/cutremt rotating", lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations) / 2  );
+        Logger.recordOutput("drive/cutremt rotating", (lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations) / 2) * Constants.WHEEL_CIRCUMFERENCE  );
         Logger.recordOutput("drive/speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE);
         return false;
         }
@@ -145,7 +145,7 @@ public class Drive extends SubsystemBase{
         setVelocity(speeds);
         Logger.recordOutput("drive/err", distance);
         Logger.recordOutput("drive/pid output", pidOutput );
-        Logger.recordOutput("drive/speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE);
+        Logger.recordOutput("drive/speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond));
         Logger.recordOutput("drive/Distance", distance);
         return false;
     }
