@@ -57,11 +57,9 @@ public class RobotContainer {
                 () -> controller.getRightX()
             )
         );
-    }
-
-    public Command getAutonomousCommand() {
-        //Test these tmr
-        return new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(1), Meters.of(1));
+    
+        controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.1), Meters.of(3)));
+     
         //return new MoveTo(drive, Meters.of(3), Meters.of(2), MetersPerSecond.of(1));
     }
 }

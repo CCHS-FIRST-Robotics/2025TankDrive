@@ -37,12 +37,14 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void execute() {
+        finished = drive.goForward(angle, Mps, distance);
 
     }
 
     @Override
     public boolean isFinished() {
-        return drive.goForward(angle, Mps, distance);
+        System.out.println(finished);
+        return finished;
      
     }
 }
