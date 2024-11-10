@@ -44,7 +44,7 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
         double volts = RobotController.getBatteryVoltage();
-        if(volts <= 11.5){
+        if(volts <= 11.8){
             count++;
         }
         if (volts >= 11.5){

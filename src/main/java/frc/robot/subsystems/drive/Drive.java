@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,7 +21,11 @@ public class Drive extends SubsystemBase{
     double turn_Kp;
     double turn_Ki;
     double turn_Kd;
+    double distance_Kp;
+    double distance_Ki;
+    double distance_Kd;
     private final PIDController turn_pidController;
+    private final PIDController distance_pidController;
     private final DriveSideIO lIO, rIO;
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
     private final DriveSideIOInputsAutoLogged lInputs = new DriveSideIOInputsAutoLogged();
@@ -37,7 +42,12 @@ public class Drive extends SubsystemBase{
         this.turn_Kp = .5;
         this.turn_Ki = 0.0;
         this.turn_Kd = 0.01;
+        this.distance_Kp = .5;
+        this.distance_Ki = 0.0;
+        this.distance_Kd = 0.01;
         this.turn_pidController = new PIDController(turn_Kp, turn_Ki, turn_Kd);
+        this.distance_pidController = new PIDController(distance_Kp, distance_Ki, distance_Kd);
+        this.distance_pidController.setTolerance(.1);
        
         this.odometry = new DifferentialDriveOdometry(
             gyroInputs.connected ? new Rotation2d(gyroInputs.heading): new Rotation2d(),
@@ -96,32 +106,34 @@ public class Drive extends SubsystemBase{
     public boolean goForward(Measure<Angle> angle, Measure<Velocity<Distance>> Mps, Measure<Distance> distance){
        
         double rotations = (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE);
-        if (-((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) >= rotations) {
-            return true;
-        }
-        else{
-        System.out.println(rotations);
-        System.out.println(-(lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations) / 2));
         double current_Angle = gyroInputs.heading * (Math.PI/180); 
-        double err = angle.in(Radians) - current_Angle;
-        double pidOutput = turn_pidController.calculate(err);
+        double driverr = (-((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) - rotations) * Constants.WHEEL_CIRCUMFERENCE;
+        double turnerr = angle.in(Radians) - current_Angle;
+        double turnpidOutput = turn_pidController.calculate(turnerr);
+        double drivepidOutput = MathUtil.clamp(distance_pidController.calculate(driverr), -Mps.in(MetersPerSecond), Mps.in(MetersPerSecond));
+
 
         ChassisSpeeds speeds = new ChassisSpeeds(
-            Mps.in(MetersPerSecond),
+            drivepidOutput,
             0, 
-            pidOutput 
+            turnpidOutput 
         );
         setVelocity(speeds);
-        Logger.recordOutput("drive/err", err);
-        Logger.recordOutput("drive/pid output", pidOutput );
+        Logger.recordOutput("drive/turnerr", turnerr);
+        Logger.recordOutput("drive/driveerr", driverr);
+        Logger.recordOutput("drive/turn pid output", turnpidOutput );
+        Logger.recordOutput("drive/drive pid output ", drivepidOutput );
         Logger.recordOutput("drive/rotastions", rotations );
         Logger.recordOutput("drive/cutremt rotating", (lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations) / 2) * Constants.WHEEL_CIRCUMFERENCE  );
         Logger.recordOutput("drive/speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE);
+        if(distance_pidController.atSetpoint()){
+            return true;
+        }
         return false;
         }
 
 
-    }
+    
 
     public boolean goToPositsion(Measure<Distance> x, Measure<Distance> y, Measure<Velocity<Distance>> Mps){
         double targetX = x.in(Meters);
