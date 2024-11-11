@@ -71,6 +71,7 @@ public class Drive extends SubsystemBase{
             lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE, 
             rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE
         );
+        break;
         }
         case SIM:{
             double leftMeters = lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
@@ -85,7 +86,7 @@ public class Drive extends SubsystemBase{
             lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE, 
             rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE
         );
-            
+        break;
         }
             default:
                 break;
@@ -105,13 +106,14 @@ public class Drive extends SubsystemBase{
 
     public boolean goForward(Measure<Angle> angle, Measure<Velocity<Distance>> Mps, Measure<Distance> distance){
        
-        double rotations = (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE);
+        double rotations = -((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) + (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE) ;
         double current_Angle = gyroInputs.heading * (Math.PI/180); 
+
         double driverr = (-((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) - rotations) * Constants.WHEEL_CIRCUMFERENCE;
         double turnerr = angle.in(Radians) - current_Angle;
+
         double turnpidOutput = turn_pidController.calculate(turnerr);
         double drivepidOutput = MathUtil.clamp(distance_pidController.calculate(driverr), -Mps.in(MetersPerSecond), Mps.in(MetersPerSecond));
-
 
         ChassisSpeeds speeds = new ChassisSpeeds(
             drivepidOutput,
