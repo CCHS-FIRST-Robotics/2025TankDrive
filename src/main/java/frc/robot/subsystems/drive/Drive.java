@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 
 import edu.wpi.first.units.*;
 import frc.robot.Constants;

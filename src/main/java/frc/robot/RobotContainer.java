@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.MoveForwardCommand;
@@ -59,7 +60,8 @@ public class RobotContainer {
         );
     
         controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.2), Meters.of(4)));
-     
+        controller.a().onTrue(new InstantCommand(() -> drive.setDriveBrakeMode(false)));
+        controller.x().onTrue(new InstantCommand(()-> drive.setDriveBrakeMode(true)));
         //return new MoveTo(drive, Meters.of(3), Meters.of(2), MetersPerSecond.of(1));
     }
 }
