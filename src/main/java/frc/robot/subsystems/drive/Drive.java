@@ -9,6 +9,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
 import org.littletonrobotics.junction.Logger;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.units.*;
 import frc.robot.Constants;
 
@@ -101,6 +104,12 @@ public class Drive extends SubsystemBase{
     public void setVoltage(Measure<Voltage> lVolts, Measure<Voltage> rVolts){
         lIO.setVoltage(lVolts);
         rIO.setVoltage(rVolts);
+    }
+
+    
+    public void setDriveBrakeMode(boolean enable) {
+        lIO.setDriveBrakeMode(enable);
+        rIO.setDriveBrakeMode(enable);
     }
 
 

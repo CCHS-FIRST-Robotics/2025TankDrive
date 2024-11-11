@@ -33,17 +33,19 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void initialize() {
+        drive.setDriveBrakeMode(true);
     }
 
     @Override
     public void execute() {
+        
         finished = drive.goForward(angle, Mps, distance);
 
     }
 
     @Override
     public boolean isFinished() {
-        System.out.println(finished);
+        
         return finished;
      
     }

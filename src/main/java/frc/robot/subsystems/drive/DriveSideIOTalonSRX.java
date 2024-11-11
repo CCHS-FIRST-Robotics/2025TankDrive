@@ -3,8 +3,10 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import edu.wpi.first.units.*;
 
@@ -41,7 +43,15 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     @Override
     public void setVoltage(Measure<Voltage> volts) {
         motor1.set(TalonSRXControlMode.PercentOutput, volts.in(Volts) / 12);
+        motor1.setNeutralMode(NeutralMode.Brake);
     }
+
+    
+    public void setDriveBrakeMode(boolean enable) {
+        motor1.setNeutralMode(enable ? NeutralMode.Brake : NeutralMode.Coast);
+    }
+
+    
 
     @Override
     public void setVelocity(Measure<Velocity<Angle>> velocity){

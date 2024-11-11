@@ -21,5 +21,8 @@ public interface DriveSideIO {
 
     public default void setVelocity(Measure<Velocity<Angle>> velocity) {}
 
+
+    public default void setDriveBrakeMode(boolean enable) {}
+
     public default void updateInputs(DriveSideIOInputs inputs) {}
 }
