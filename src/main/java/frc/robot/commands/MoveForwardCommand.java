@@ -14,6 +14,7 @@ public class MoveForwardCommand extends Command {
 
     public MoveForwardCommand(Drive drive) {
         this.drive = drive;
+        addRequirements(drive);
     }
 
     @Override
@@ -28,10 +29,16 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        System.out.println(drive.getLeftEncoderRotations().in(Rotations));
-        System.out.println(drive.getRightEncoderRotations().in(Rotations));
-     
-        return drive.getLeftEncoderRotations().in(Rotations) > totalRotations || 
-            drive.getRightEncoderRotations().in(Rotations) > totalRotations;
+        double leftRotations = drive.getLeftEncoderRotations().in(Rotations);
+        double rightRotations = drive.getRightEncoderRotations().in(Rotations);
+        System.out.println("Left Rotations: " + leftRotations);
+        System.out.println("Right Rotations: " + rightRotations);
+    
+        return leftRotations >= totalRotations && rightRotations >= totalRotations;
+    }
+
+    @Override
+    public void end (boolean interrupted) {
+        drive.setVelocity(new ChassisSpeeds(0,0,0));
     }
 }
