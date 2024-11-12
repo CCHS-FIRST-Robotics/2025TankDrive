@@ -42,7 +42,7 @@ public class Drive extends SubsystemBase{
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
-        this.turn_Kp = .5;
+        this.turn_Kp = .1;
         this.turn_Ki = 0.0;
         this.turn_Kd = 0.01;
         this.distance_Kp = 10;
