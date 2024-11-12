@@ -42,8 +42,8 @@ public class Drive extends SubsystemBase{
         gyroIO.updateInputs(gyroInputs);
         robotPose2d = odometry.update(
             gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),
-            lInputs.distanceTraveled.in(Meters), 
-            rInputs.distanceTraveled.in(Meters)
+            lInputs.distanceTraveled, 
+            rInputs.distanceTraveled
         );
         lIO.updateInputs(lInputs);
         rIO.updateInputs(rInputs);
@@ -71,7 +71,7 @@ public class Drive extends SubsystemBase{
             wheelSpeeds.rightMetersPerSecond 
             / Constants.WHEEL_RADIUS // to get radians per second of the wheel
             / Constants.GEAR_RATIO // to get radians per second of the motor
-        ); 
+        );
 
         lIO.setVelocity(leftMotorVelocity); // should be 88.83
         rIO.setVelocity(rightMotorVelocity);

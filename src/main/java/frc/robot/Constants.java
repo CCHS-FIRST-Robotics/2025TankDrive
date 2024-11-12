@@ -20,6 +20,6 @@ public final class Constants {
 
     public static final double TRACK_WIDTH = 0.66; // meters
     public static final double WHEEL_RADIUS = 0.0762; // meters
-    public static final double GEAR_RATIO = 1; // !
-    public static final double MAX_SPEED = 2; // meters per second
+    public static final double GEAR_RATIO = 1/10.71; // !
+    public static final double MAX_SPEED = 0.6635294118; // meters per second
 }
