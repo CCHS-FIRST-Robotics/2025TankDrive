@@ -123,11 +123,9 @@ public class Drive extends SubsystemBase{
 
     public boolean goForward(Measure<Angle> angle, Measure<Velocity<Distance>> Mps, Measure<Angle> TargetRottions){
         System.out.println("Running");
-       
-
 
         double driverr = (-((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) - TargetRottions.in(Rotations)) * Constants.WHEEL_CIRCUMFERENCE;
-        double turnerr = gyroInputs.heading - angle.in(Degrees);
+        double turnerr =  angle.in(Degrees) - gyroInputs.heading;
 
         double turnpidOutput = turn_pidController.calculate(turnerr);
         double drivepidOutput = MathUtil.clamp(distance_pidController.calculate(driverr), -Mps.in(MetersPerSecond), Mps.in(MetersPerSecond));
