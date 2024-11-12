@@ -45,9 +45,9 @@ public class Drive extends SubsystemBase{
         this.turn_Kp = .5;
         this.turn_Ki = 0.0;
         this.turn_Kd = 0.01;
-        this.distance_Kp = .5;
+        this.distance_Kp = .001;
         this.distance_Ki = 0.0;
-        this.distance_Kd = 0.01;
+        this.distance_Kd = 0.00;
         this.turn_pidController = new PIDController(turn_Kp, turn_Ki, turn_Kd);
         this.distance_pidController = new PIDController(distance_Kp, distance_Ki, distance_Kd);
         this.distance_pidController.setTolerance(.1);
