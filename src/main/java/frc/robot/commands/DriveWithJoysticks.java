@@ -10,7 +10,7 @@ public class DriveWithJoysticks extends Command{
     Drive drive;
     Supplier<Double> leftYSupplier;
     Supplier<Double> leftXSupplier;
-    
+
     public DriveWithJoysticks(
         Drive drive,
         Supplier<Double> leftYSupplier,
@@ -21,25 +21,25 @@ public class DriveWithJoysticks extends Command{
         this.leftYSupplier = leftYSupplier;
         this.leftXSupplier = leftXSupplier;
     }
-    
+
     @Override
     public void execute() {
         double leftY = leftYSupplier.get();
         double leftX = leftXSupplier.get();
 
-        ChassisSpeeds speeds = new ChassisSpeeds(
-            applyPreferences(leftY),
+        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
+            convertToVelocity(leftY),
             0, 
-            -applyPreferences(leftX) * 2 // chassisspeeds considers rotating clockwise as positive
+            convertToVelocity(leftX) * -1 // chassisspeeds considers rotating clockwise as positive
         );
 
-        drive.setVelocity(speeds);
+        drive.setVelocity(chassisSpeeds);
     }
 
-    public double applyPreferences(double input){
+    public double convertToVelocity(double input){
         if(Math.abs(input) < Constants.ANALOG_DEADZONE){
             return 0; 
         }
-        return Math.signum(input) * Math.pow(Math.abs(input), Constants.JOYSTICK_EXPONENT) * Constants.MAX_SPEED; // 4 meters per second
+        return Math.signum(input) * Math.pow(Math.abs(input), Constants.JOYSTICK_EXPONENT) * Constants.MAX_SPEED;
     }
 }

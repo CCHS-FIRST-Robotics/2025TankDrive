@@ -9,6 +9,10 @@ import edu.wpi.first.wpilibj.RobotBase;
 /**
  * to do: 
  * 
+ * check the gear ratio and wheel radius
+ * when it's fully forward, motor is spinning at 88.83 rps, multiply by gear ratio and radius for meters per second
+ * then change max speed
+ * 
  * check if the gyro is accurately logging
  * 
  * add twist support for sim

@@ -9,6 +9,7 @@ public interface DriveSideIO {
     @AutoLog
     public static class DriveSideIOInputs {
         public Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0); // rotations per second
+        public Measure<Distance> distanceTraveled = Meters.of(0); // rotations per second
         
         public Measure<Current> motor1Current = Amps.of(0); // amps
         public Measure<Voltage> motor1Voltage = Volts.of(0); // volts

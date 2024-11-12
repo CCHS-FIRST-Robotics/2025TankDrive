@@ -6,12 +6,12 @@ package frc.robot;
 
 public final class Constants {
     public static final double PERIOD = 0.02;
-    public static final double ANALOG_DEADZONE = 0.1;
-    public static final double JOYSTICK_EXPONENT = 3.5;
     public static enum Mode {REAL, SIM, REPLAY}
     public static final Mode MODE = Mode.REAL;
-
-    public static final int CONTROLLER_PORT_1 = 0;
+    
+    public static final int CONTROLLER_PORT = 0;
+    public static final double ANALOG_DEADZONE = 0.1;
+    public static final double JOYSTICK_EXPONENT = 2;
 
     public static final int TALONSRX_ID_1 = 23;
     public static final int TALONSRX_ID_2 = 2;

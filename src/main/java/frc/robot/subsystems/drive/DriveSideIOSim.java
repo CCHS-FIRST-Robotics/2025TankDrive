@@ -41,10 +41,10 @@ public class DriveSideIOSim implements DriveSideIO {
 
     @Override
     public void setVelocity(Measure<Velocity<Angle>> velocity){
-        double volts = PID.calculate(motor.getAngularVelocityRadPerSec(), velocity.in(RadiansPerSecond))
-                       + F.calculate(currentSetpoint.in(RadiansPerSecond));
-        
-        this.setVoltage(Volts.of(volts));
+        this.setVoltage(Volts.of(
+            PID.calculate(motor.getAngularVelocityRadPerSec(), velocity.in(RadiansPerSecond))
+            + F.calculate(currentSetpoint.in(RadiansPerSecond))
+        ));
         currentSetpoint = velocity;
     }
 
@@ -53,6 +53,7 @@ public class DriveSideIOSim implements DriveSideIO {
         motor.update(Constants.PERIOD);
 
         inputs.currentSetpoint = currentSetpoint;
+        inputs.distanceTraveled = Meters.of(motor.getAngularPositionRotations() * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE);
 
         inputs.motor1Current = Amps.of(motor.getCurrentDrawAmps());
         inputs.motor1Voltage = Volts.of(appliedVolts.in(Volts));
