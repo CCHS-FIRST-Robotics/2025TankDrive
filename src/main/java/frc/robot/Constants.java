@@ -23,8 +23,8 @@ public final class Constants {
     public static final double TRACK_WIDTH = 0.66; //meters
     public static final double WHEEL_RADIUS = 0.0762; //meters
     public static final double WHEEL_CIRCUMFERENCE = 2 * Math.PI * WHEEL_RADIUS;
-    public static final double GEAR_RATIO = 1/10.71;
-    public static final double MAX_SPEED = 3;
+    public static final double GEAR_RATIO = 1/10.7;
+    public static final double MAX_SPEED = 2;
 
     /*
     public static class AutoPathConstants {        

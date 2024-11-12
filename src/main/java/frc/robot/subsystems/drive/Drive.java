@@ -25,18 +25,18 @@ public class Drive extends SubsystemBase{
     private final DriveSideIOInputsAutoLogged lInputs = new DriveSideIOInputsAutoLogged();
     private final DriveSideIOInputsAutoLogged rInputs = new DriveSideIOInputsAutoLogged();
 
-    //private ArrayList<Pose2d> positionTrajectory = new ArrayList<Pose2d>();
-    //private int trajectoryCounter = -1;
-    //private int currentPathNum = 0;
+    /*
+    private ArrayList<Pose2d> positionTrajectory = new ArrayList<Pose2d>();
+    private int trajectoryCounter = -1;
+    private int currentPathNum = 0;
 
-    /*public enum CONTROL_MODE {
+    public enum CONTROL_MODE {
         DISABLED,
         MODULE_SETPOINT,
         CHASSIS_SETPOINT,
         POSITION_SETPOINT,
         CHARACTERIZING
     };
-
     */
 
     public Drive(GyroIO gyroIO, DriveSideIO leftIO, DriveSideIO rightIO) {
@@ -66,18 +66,14 @@ public class Drive extends SubsystemBase{
         Logger.processInputs("Left side ", lInputs);
         Logger.processInputs("Right side ", rInputs);
 
-        /*switch (controlMode) {
+        /*
+        switch (controlMode) {
             case DISABLED:
                 lIO.setVelocity(RotationsPerSecond.of(0));
                 rIO.setVelocity(RotationsPerSecond.of(0));
         }
         */
       
-    }
-
-    public void setVoltage(Measure<Voltage> lVolts, Measure<Voltage> rVolts){
-        lIO.setVoltage(lVolts);
-        rIO.setVoltage(rVolts);
     }
 
     public void setVelocity(ChassisSpeeds speeds){
@@ -91,7 +87,8 @@ public class Drive extends SubsystemBase{
     }
 
 
-    /*public void runPosition(ArrayList<Pose2d> poseTrajectory, ArrayList<Twist2d> twistTrajectory) {
+    /*
+    public void runPosition(ArrayList<Pose2d> poseTrajectory, ArrayList<Twist2d> twistTrajectory) {
         this.positionTrajectory = poseTrajectory;
         trajectoryCounter = 0;
     }

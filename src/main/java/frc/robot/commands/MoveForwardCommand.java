@@ -10,6 +10,8 @@ public class MoveForwardCommand extends Command {
     private final Drive drive;
 
     int totalRotations = 5;
+    double leftRotations;
+    double rightRotations;
     
 
     public MoveForwardCommand(Drive drive) {
@@ -24,17 +26,17 @@ public class MoveForwardCommand extends Command {
     @Override
     public void execute() {
         drive.setVelocity(new ChassisSpeeds(0.3, 0, 0));
+        this.leftRotations = -drive.getLeftEncoderRotations().in(Rotations);
+        this.rightRotations = -drive.getRightEncoderRotations().in(Rotations);
+
+        System.out.println("Left Rotations: " + leftRotations);
+        System.out.println("Right Rotations: " + rightRotations);
 
     }
 
     @Override
     public boolean isFinished() {
-        double leftRotations = -drive.getLeftEncoderRotations().in(Rotations);
-        double rightRotations = -drive.getRightEncoderRotations().in(Rotations);
-        System.out.println("Left Rotations: " + leftRotations);
-        System.out.println("Right Rotations: " + rightRotations);
-    
-        return leftRotations >= totalRotations && rightRotations >= totalRotations;
+        return this.leftRotations > totalRotations && this.rightRotations > totalRotations;
     }
 
     /* 
