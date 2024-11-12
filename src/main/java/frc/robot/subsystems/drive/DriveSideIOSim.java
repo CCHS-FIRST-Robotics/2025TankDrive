@@ -13,6 +13,7 @@ public class DriveSideIOSim implements DriveSideIO {
     private final PIDController PID;
     private final SimpleMotorFeedforward F;
 
+    // volts per rps
     private final double kP = 10;
     private final double kI = 0;
     private final double kD = 0;
@@ -52,13 +53,13 @@ public class DriveSideIOSim implements DriveSideIO {
     public void updateInputs(DriveSideIOInputs inputs) {
         motor.update(Constants.PERIOD);
 
-        inputs.currentSetpoint = currentSetpoint;
-        inputs.distanceTraveled = Meters.of(motor.getAngularPositionRotations() * Constants.WHEEL_RADIUS * Constants.GEAR_RATIO);
+        inputs.currentSetpoint = currentSetpoint.in(RotationsPerSecond);
+        inputs.distanceTraveled = motor.getAngularPositionRotations() * Constants.WHEEL_RADIUS * Constants.GEAR_RATIO;
 
-        inputs.motor1Current = Amps.of(motor.getCurrentDrawAmps());
-        inputs.motor1Voltage = Volts.of(appliedVolts.in(Volts));
-        inputs.motor1Position = Rotations.of(motor.getAngularPositionRotations());
-        inputs.motor1Velocity = RotationsPerSecond.of(motor.getAngularVelocityRPM() / 60);
-        inputs.motor1Temperature = Celsius.of(0);
+        inputs.motor1Current = motor.getCurrentDrawAmps();
+        inputs.motor1Voltage = appliedVolts.in(Volts);
+        inputs.motor1Position = motor.getAngularPositionRotations();
+        inputs.motor1Velocity = motor.getAngularVelocityRPM() / 60;
+        inputs.motor1Temperature = 0;
     }
 }

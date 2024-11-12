@@ -36,12 +36,6 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         motor1.configFactoryDefault();
         motor1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor1.setSelectedSensorPosition(0);
-
-        // motor1.config_kP(0, kP, 0);
-		// motor1.config_kI(0, kI, 0);
-		// motor1.config_kD(0, kD, 0);
-        // motor1.config_kF(0, kF, 0);
-
         motor1.setInverted(isInverted);
         motor2.follow(motor1);
         motor2.setInverted(InvertType.FollowMaster);
@@ -54,11 +48,6 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
 
     @Override
     public void setVelocity(Measure<Velocity<Angle>> velocity){
-        // motor1.set( // this function takes in encoder ticks per 0.1 seconds
-        //     TalonSRXControlMode.Velocity, 
-        //     velocity.in(RotationsPerSecond) * encoderTicks * 0.1
-        // );
-
         double currentVelocityRotationsPerSecond = motor1.getSelectedSensorVelocity() * 10 / 4096;
 
         this.setVoltage(Volts.of(
