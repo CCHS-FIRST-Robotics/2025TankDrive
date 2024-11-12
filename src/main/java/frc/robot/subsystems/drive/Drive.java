@@ -45,7 +45,7 @@ public class Drive extends SubsystemBase{
         this.turn_Kp = .5;
         this.turn_Ki = 0.0;
         this.turn_Kd = 0.01;
-        this.distance_Kp = .001;
+        this.distance_Kp = 10;
         this.distance_Ki = 0.0;
         this.distance_Kd = 0.00;
         this.turn_pidController = new PIDController(turn_Kp, turn_Ki, turn_Kd);
@@ -114,6 +114,7 @@ public class Drive extends SubsystemBase{
 
 
     public boolean goForward(Measure<Angle> angle, Measure<Velocity<Distance>> Mps, Measure<Distance> distance){
+        System.out.println("Running");
        
         double rotations = -((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) + (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE) ;
         double current_Angle = gyroInputs.heading * (Math.PI/180); 
