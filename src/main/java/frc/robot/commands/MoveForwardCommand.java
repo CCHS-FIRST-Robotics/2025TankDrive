@@ -23,22 +23,24 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(2, 0, 0));
+        drive.setVelocity(new ChassisSpeeds(0.3, 0, 0));
 
     }
 
     @Override
     public boolean isFinished() {
-        double leftRotations = drive.getLeftEncoderRotations().in(Rotations);
-        double rightRotations = drive.getRightEncoderRotations().in(Rotations);
+        double leftRotations = -drive.getLeftEncoderRotations().in(Rotations);
+        double rightRotations = -drive.getRightEncoderRotations().in(Rotations);
         System.out.println("Left Rotations: " + leftRotations);
         System.out.println("Right Rotations: " + rightRotations);
     
         return leftRotations >= totalRotations && rightRotations >= totalRotations;
     }
 
+    /* 
     @Override
     public void end (boolean interrupted) {
         drive.setVelocity(new ChassisSpeeds(0,0,0));
     }
+    */
 }
