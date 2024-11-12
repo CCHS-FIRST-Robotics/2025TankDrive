@@ -50,7 +50,7 @@ public class Drive extends SubsystemBase{
         this.distance_Kd = 0.00;
         this.turn_pidController = new PIDController(turn_Kp, turn_Ki, turn_Kd);
         this.distance_pidController = new PIDController(distance_Kp, distance_Ki, distance_Kd);
-        this.distance_pidController.setTolerance(.1);
+        this.distance_pidController.setTolerance(1);
        
         this.odometry = new DifferentialDriveOdometry(
             gyroInputs.connected ? new Rotation2d(gyroInputs.heading): new Rotation2d(),
@@ -112,15 +112,22 @@ public class Drive extends SubsystemBase{
         rIO.setDriveBrakeMode(enable);
     }
 
+    public Measure<Angle> getLeftRotations(){
+        return lInputs.motor1Position;
+    }
 
-    public boolean goForward(Measure<Angle> angle, Measure<Velocity<Distance>> Mps, Measure<Distance> distance){
+      public Measure<Angle> getRightRotations(){
+        return rInputs.motor1Position;
+    }
+
+
+    public boolean goForward(Measure<Angle> angle, Measure<Velocity<Distance>> Mps, Measure<Angle> TargetRottions){
         System.out.println("Running");
        
-        double rotations = -((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) + (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE) ;
-        double current_Angle = gyroInputs.heading * (Math.PI/180); 
 
-        double driverr = (-((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) - rotations) * Constants.WHEEL_CIRCUMFERENCE;
-        double turnerr = angle.in(Radians) - current_Angle;
+
+        double driverr = (-((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) - TargetRottions.in(Rotations)) * Constants.WHEEL_CIRCUMFERENCE;
+        double turnerr = gyroInputs.heading - angle.in(Degrees);
 
         double turnpidOutput = turn_pidController.calculate(turnerr);
         double drivepidOutput = MathUtil.clamp(distance_pidController.calculate(driverr), -Mps.in(MetersPerSecond), Mps.in(MetersPerSecond));
@@ -135,7 +142,7 @@ public class Drive extends SubsystemBase{
         Logger.recordOutput("drive/driveerr", driverr);
         Logger.recordOutput("drive/turn pid output", turnpidOutput );
         Logger.recordOutput("drive/drive pid output ", drivepidOutput );
-        Logger.recordOutput("drive/rotastions", rotations );
+        Logger.recordOutput("drive/rotat ", TargetRottions );
         Logger.recordOutput("drive/cutremt rotating", (lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations) / 2) * Constants.WHEEL_CIRCUMFERENCE  );
         Logger.recordOutput("drive/speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE);
         if(distance_pidController.atSetpoint()){
