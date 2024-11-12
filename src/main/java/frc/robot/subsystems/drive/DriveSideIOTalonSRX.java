@@ -12,11 +12,6 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     private final TalonSRX motor1, motor2;
     int encoderTicks = 4096;
 
-    private final double kP = 0;
-    private final double kI = 0;
-    private final double kD = 0;
-    private final double kF = 1; // same as kV
-
     Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
     
     public DriveSideIOTalonSRX(int id1, int id2, boolean isInverted){
@@ -24,13 +19,8 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         motor2 = new TalonSRX(id2);
 
         motor1.configFactoryDefault();
-        motor1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        motor1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
         motor1.setSelectedSensorPosition(0);
-
-        motor1.config_kP(0, kP, 0); //why all 0 though?
-		motor1.config_kI(0, kI, 0);
-		motor1.config_kD(0, kD, 0);
-        motor1.config_kF(0, kF, 0);
 
         motor1.setInverted(isInverted);
 

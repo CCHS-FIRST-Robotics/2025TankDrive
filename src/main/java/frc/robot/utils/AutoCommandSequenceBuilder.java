@@ -1,4 +1,4 @@
-package frc.robot.utils;
+/*package frc.robot.utils;
 
 import java.util.*;
 
@@ -32,7 +32,7 @@ public final class AutoCommandSequenceBuilder {
         double totalTime = driveTime;
 
         // drive to the next waypoint
-        //events.add(Pair.of(0.0, drive.followTrajectory(DriveTrajectoryGenerator.generateChoreoTrajectoryFromFile(path))));
+        events.add(Pair.of(0.0, drive.followTrajectory(DriveTrajectoryGenerator.generateChoreoTrajectoryFromFile(path))));
         
 
         // append to the command sequence
@@ -43,3 +43,4 @@ public final class AutoCommandSequenceBuilder {
         return autoCommandSequence;
     }
 }
+*/

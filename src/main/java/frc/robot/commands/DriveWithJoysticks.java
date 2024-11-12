@@ -35,6 +35,6 @@ public class DriveWithJoysticks extends Command{
         if (Math.abs(input) < Constants.ANALOG_DEADZONE){
             return 0; 
         }
-        return Math.signum(input) * scaledExponential * Constants.MAX_SPEED; // 4 m/s
+        return Math.signum(input) * scaledExponential * Constants.MAX_SPEED;
     }
 }

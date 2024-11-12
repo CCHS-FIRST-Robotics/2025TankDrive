@@ -1,4 +1,4 @@
-package frc.robot.utils;
+/*package frc.robot.utils;
 
 import edu.wpi.first.math.geometry.*;
 import com.choreo.lib.*;
@@ -27,3 +27,4 @@ public final class DriveTrajectoryGenerator {
         return new DriveTrajectory(poseTrajectory, velocityTrajectory);
     }
 }
+*/

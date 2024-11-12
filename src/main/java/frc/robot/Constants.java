@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 public final class Constants {
     public static final double PERIOD = 0.02; //20 ms
@@ -21,22 +21,26 @@ public final class Constants {
     public static final int TALONSRX_ID_4 = 11;
 
     public static final double TRACK_WIDTH = 0.66; //meters
-    public static final double WHEEL_RADIUS = 0.07; //meters
+    public static final double WHEEL_RADIUS = 0.0762; //meters
     public static final double WHEEL_CIRCUMFERENCE = 2 * Math.PI * WHEEL_RADIUS;
-    public static final double GEAR_RATIO = 1;
+    public static final double GEAR_RATIO = 1/10.71;
     public static final double MAX_SPEED = 2;
 
+    /*
     public static class AutoPathConstants {        
         // arraylists for paths
         public static final ArrayList<String> twoStraight = new ArrayList<String>();
 
         // file names for paths
-        public static final String TWO_STRAIGHT_1 = "Forward1Meter";
+        public static final String STRAIGHT1 = "Forward1Meter";
 
         public static final double MAX_MOVE_TIME = 1.0;
 
+        
         static {
-            twoStraight.add(TWO_STRAIGHT_1);
+            twoStraight.add(STRAIGHT1);
         }
+        
     }
+    */
 }
