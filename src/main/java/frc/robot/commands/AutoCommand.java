@@ -19,7 +19,7 @@ public class AutoCommand extends Command {
         this.totalTime = totalTime;
 
         for (Pair<Double, Command> marker : events) {
-            Set<Subsystem> reqs = marker.getSecond().getRequirements();
+            Set<Subsystem> reqs = marker.getSecond().getRequirements(); //markers 
             m_requirements.addAll(reqs);
         }
     }
