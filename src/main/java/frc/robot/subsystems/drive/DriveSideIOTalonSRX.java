@@ -65,14 +65,13 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
             PID.calculate(currentVelocityRotationsPerSecond, velocity.in(RotationsPerSecond))
             + F.calculate(velocity.in(RotationsPerSecond))
         ));
-
         currentSetpoint = velocity;
     }
 
     @Override
     public void updateInputs(DriveSideIOInputs inputs) {
         inputs.currentSetpoint = currentSetpoint;
-        inputs.distanceTraveled = Meters.of((motor1.getSelectedSensorPosition() / 4096) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE);
+        inputs.distanceTraveled = Meters.of((motor1.getSelectedSensorPosition() / 4096) * Constants.WHEEL_RADIUS * Constants.GEAR_RATIO);
 
         inputs.motor1Current = Amps.of(motor1.getStatorCurrent());
         inputs.motor1Voltage = Volts.of(motor1.getMotorOutputVoltage());

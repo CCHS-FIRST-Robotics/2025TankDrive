@@ -53,7 +53,7 @@ public class DriveSideIOSim implements DriveSideIO {
         motor.update(Constants.PERIOD);
 
         inputs.currentSetpoint = currentSetpoint;
-        inputs.distanceTraveled = Meters.of(motor.getAngularPositionRotations() * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE);
+        inputs.distanceTraveled = Meters.of(motor.getAngularPositionRotations() * Constants.WHEEL_RADIUS * Constants.GEAR_RATIO);
 
         inputs.motor1Current = Amps.of(motor.getCurrentDrawAmps());
         inputs.motor1Voltage = Volts.of(appliedVolts.in(Volts));
