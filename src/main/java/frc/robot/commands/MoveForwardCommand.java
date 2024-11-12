@@ -47,7 +47,7 @@ public class MoveForwardCommand extends Command {
     public void initialize() {
         drive.setDriveBrakeMode(true);
         rotations = Rotations.of(-((drive.getLeftRotations().in(Rotations) + drive.getRightRotations().in(Rotations)) / 2) + (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE)) ;
-        target_Angle = Degrees.of(drive.getHeading()); 
+        target_Angle = Degrees.of(drive.getHeading() + angle.in(Degrees)); 
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        
+
         return finished;
      
     }
