@@ -30,18 +30,18 @@ public class DriveWithJoysticks extends Command{
         double leftX = leftXSupplier.get();
 
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
-            convertToVelocity(leftY),
+            applyPreferences(leftY) * Constants.MAX_SPEED.in(MetersPerSecond),
             0, 
-            convertToVelocity(leftX) * -1 // chassisspeeds considers rotating clockwise as positive // ! this is technically in meterspersecond instead of radianspersecond
+            applyPreferences(leftX) * -1 // chassisspeeds considers rotating clockwise as positive
         );
 
         drive.setVelocity(chassisSpeeds);
     }
 
-    public double convertToVelocity(double input){
+    public double applyPreferences(double input){
         if(Math.abs(input) < Constants.JOYSTICK_DEADZONE){
             return 0; 
         }
-        return Math.signum(input) * Math.pow(Math.abs(input), Constants.JOYSTICK_EXPONENT) * Constants.MAX_SPEED.in(MetersPerSecond);
+        return Math.signum(input) * Math.pow(Math.abs(input), Constants.JOYSTICK_EXPONENT);
     }
 }

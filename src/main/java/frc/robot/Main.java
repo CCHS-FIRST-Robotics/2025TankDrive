@@ -10,16 +10,12 @@ import edu.wpi.first.wpilibj.RobotBase;
  * to do: 
  * 
  * ! check the track width again
+ * check the gear ratio by seeing if at 12V the encoder reads 6.9 (88.83/Gear_ratio) rotations per second
+ * tune P
  * 
- * check the gear ratio and wheel radius
- * when it's fully forward, motor is spinning at 88.83 rps, multiply by gear ratio and radius for meters per second
- * then change max speed
- * 
- * encoder measures wheel rotation
- * check if the gyro is accurately logging
+ * check gyro logging
  * 
  * add twist support for sim
- * standardize logged units for everything
  */
 
 public final class Main {

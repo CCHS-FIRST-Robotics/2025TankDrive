@@ -18,10 +18,11 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     private final double kI = 0;
     private final double kD = 0;
     private final double kS = 0;
-    private final double kV = 0.1350844278; // at 88.83 rotations per second, output 12 volts
+    private final double kV = 0.135; // at 88.83 rotations per second, output 12 volts
     private final double kA = 0;
 
     Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
+    DriveSideIOInputs inputs = new DriveSideIOInputs();
     
     public DriveSideIOTalonSRX(int id1, int id2, boolean isInverted){
         motor1 = new TalonSRX(id1);
@@ -44,10 +45,8 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
 
     @Override
     public void setVelocity(Measure<Velocity<Angle>> velocity){
-        double currentVelocityRotationsPerSecond = motor1.getSelectedSensorVelocity() * 10 / 4096;
-
         this.setVoltage(Volts.of(
-            PID.calculate(currentVelocityRotationsPerSecond, velocity.in(RotationsPerSecond))
+            PID.calculate(inputs.motor1Velocity, velocity.in(RotationsPerSecond))
             + F.calculate(velocity.in(RotationsPerSecond))
         ));
         currentSetpoint = velocity;
@@ -55,9 +54,6 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
 
     @Override
     public void updateInputs(DriveSideIOInputs inputs) {
-        inputs.currentSetpoint = currentSetpoint.in(RotationsPerSecond);
-        inputs.distanceTraveled = (motor1.getSelectedSensorPosition() / 4096) * (2 * Math.PI * Constants.WHEEL_RADIUS.in(Meters));
-
         inputs.motor1Current = motor1.getStatorCurrent();
         inputs.motor1Voltage = motor1.getMotorOutputVoltage();
         inputs.motor1Temperature = motor1.getTemperature();
@@ -66,5 +62,10 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         inputs.wheelVelocity = motor1.getSelectedSensorVelocity() * 10 / 4096;
         inputs.motor1Position = inputs.wheelPosition * Constants.GEAR_RATIO;
         inputs.motor1Velocity = inputs.wheelVelocity * Constants.GEAR_RATIO;
+
+        inputs.currentSetpoint = currentSetpoint.in(RotationsPerSecond);
+        inputs.distanceTraveled = inputs.wheelPosition * Constants.WHEEL_CIRCUMFERENCE.in(Meters);
+
+        this.inputs = inputs;
     }
 }

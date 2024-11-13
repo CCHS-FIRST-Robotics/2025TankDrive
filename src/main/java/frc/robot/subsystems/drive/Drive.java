@@ -61,15 +61,15 @@ public class Drive extends SubsystemBase{
     public void setVelocity(ChassisSpeeds chassisSpeeds){
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
 
-        Measure<Velocity<Angle>> leftMotorVelocity = RadiansPerSecond.of(
+        Measure<Velocity<Angle>> leftMotorVelocity = RotationsPerSecond.of(
             wheelSpeeds.leftMetersPerSecond 
-            / Constants.WHEEL_RADIUS.in(Meters) // to get radians per second of the wheel
-            * Constants.GEAR_RATIO // to get radians per second of the motor
+            / Constants.WHEEL_CIRCUMFERENCE.in(Meters) // to get rotations per second of the wheel
+            * Constants.GEAR_RATIO // to get rotations per second of the motor
         );
-        Measure<Velocity<Angle>> rightMotorVelocity = RadiansPerSecond.of(
+        Measure<Velocity<Angle>> rightMotorVelocity = RotationsPerSecond.of(
             wheelSpeeds.rightMetersPerSecond 
-            / Constants.WHEEL_RADIUS.in(Meters) // to get radians per second of the wheel
-            * Constants.GEAR_RATIO // to get radians per second of the motor
+            / Constants.WHEEL_CIRCUMFERENCE.in(Meters) // to get rotations per second of the wheel
+            * Constants.GEAR_RATIO // to get rotations per second of the motor
         );
 
         lIO.setVelocity(leftMotorVelocity); // should be 88.83 rotations per second
