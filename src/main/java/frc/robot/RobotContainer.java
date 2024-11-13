@@ -17,7 +17,7 @@ import frc.robot.commands.MoveTo;
 import frc.robot.subsystems.drive.*; 
 
 public class RobotContainer {
-    private final CommandXboxController controller = new CommandXboxController(Constants.CONTROLLER_PORT_1);
+    private final CommandXboxController controller = new CommandXboxController(Constants.CONTROLLER_PORT);
     
     private final Drive drive;
 

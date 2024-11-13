@@ -4,23 +4,27 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.units.*;
+
 public final class Constants {
     public static final double PERIOD = 0.02;
-    public static final double ANALOG_DEADZONE = 0.1;
-    public static final double JOYSTICK_EXPONENT = 3.5;
     public static enum Mode {REAL, SIM, REPLAY}
-    public static final Mode MODE = Mode.REAL;
-
-    public static final int CONTROLLER_PORT_1 = 0;
+    public static final Mode MODE = Mode.SIM;
+    
+    public static final int CONTROLLER_PORT = 0;
+    public static final double JOYSTICK_DEADZONE = 0.1;
+    public static final double JOYSTICK_EXPONENT = 2;
 
     public static final int TALONSRX_ID_1 = 23;
     public static final int TALONSRX_ID_2 = 2;
     public static final int TALONSRX_ID_3 = 10;
     public static final int TALONSRX_ID_4 = 11;
 
-    public static final double TRACK_WIDTH = 0.66;
-    public static final double WHEEL_RADIUS = 0.0762;
-    public static final double WHEEL_CIRCUMFERENCE = 2 * Math.PI * WHEEL_RADIUS;
-    public static final double GEAR_RATIO = 1;
-    public static final double MAX_SPEED = 2;
+    public static final Measure<Distance> TRACK_WIDTH = Meters.of(.66);
+    public static final Measure<Distance> WHEEL_RADIUS = Meters.of(0.0762);
+    public static final Measure<Distance> WHEEL_CIRCUMFERENCE = Meters.of(2 * Math.PI * WHEEL_RADIUS.in(Meters));
+    public static final double GEAR_RATIO = 12.755; // for every GEAR_RATIO rotations of the input, the output rotates once
+    public static final Measure<Velocity<Distance>> MAX_SPEED = MetersPerSecond.of(3.334);
 }

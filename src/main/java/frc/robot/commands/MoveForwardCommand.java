@@ -6,9 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.lang.annotation.Target;
 
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;
@@ -47,7 +45,7 @@ public class MoveForwardCommand extends Command {
     public void initialize() {
         drive.setDriveBrakeMode(true);
 
-        target_Rotations = Rotations.of(-((drive.getLeftRotations().in(Rotations) + drive.getRightRotations().in(Rotations)) / 2) + (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE)) ;
+        target_Rotations = Rotations.of(-((drive.getLeftRotations().in(Rotations) + drive.getRightRotations().in(Rotations)) / 2) + (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE.in(Meters))) ;
         target_Angle = Degrees.of(drive.getHeading() + angle.in(Degrees)); 
     }
 

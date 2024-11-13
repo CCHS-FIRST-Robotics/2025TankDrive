@@ -17,8 +17,8 @@ public class DriveSideIOSim implements DriveSideIO {
     private final double kI = 0;
     private final double kD = 0;
     private final double kS = 0;
-    private final double kV = 2.54 * Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
-    private final double kA = 0.27 * Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
+    private final double kV = 2.54 * Constants.WHEEL_RADIUS.in(Meters) / Constants.GEAR_RATIO;
+    private final double kA = 0.27 * Constants.WHEEL_RADIUS.in(Meters) / Constants.GEAR_RATIO;
 
     Measure<Voltage> appliedVolts = Volts.of(0);
     Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
