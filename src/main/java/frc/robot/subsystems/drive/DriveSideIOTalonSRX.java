@@ -3,12 +3,8 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import com.ctre.phoenix.motorcontrol.*;
+import edu.wpi.first.math.controller.*;
 import edu.wpi.first.units.*;
 import frc.robot.Constants;
 
@@ -22,7 +18,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     private final double kI = 0;
     private final double kD = 0;
     private final double kS = 0;
-    private final double kV = 0.135; // at 88.83 rotations per second, output 12 volts
+    private final double kV = 0.1350844278; // at 88.83 rotations per second, output 12 volts
     private final double kA = 0;
 
     Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
@@ -60,12 +56,15 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     @Override
     public void updateInputs(DriveSideIOInputs inputs) {
         inputs.currentSetpoint = currentSetpoint.in(RotationsPerSecond);
-        inputs.distanceTraveled = (motor1.getSelectedSensorPosition() / 4096) * Constants.WHEEL_RADIUS * Constants.GEAR_RATIO;
+        inputs.distanceTraveled = (motor1.getSelectedSensorPosition() / 4096) * (2 * Math.PI * Constants.WHEEL_RADIUS.in(Meters));
 
         inputs.motor1Current = motor1.getStatorCurrent();
         inputs.motor1Voltage = motor1.getMotorOutputVoltage();
-        inputs.motor1Position = motor1.getSelectedSensorPosition() / 4096;
-        inputs.motor1Velocity = motor1.getSelectedSensorVelocity() * 10 / 4096;
         inputs.motor1Temperature = motor1.getTemperature();
+
+        inputs.wheelPosition = motor1.getSelectedSensorPosition() / 4096;
+        inputs.wheelVelocity = motor1.getSelectedSensorVelocity() * 10 / 4096;
+        inputs.motor1Position = inputs.wheelPosition * Constants.GEAR_RATIO;
+        inputs.motor1Velocity = inputs.wheelVelocity * Constants.GEAR_RATIO;
     }
 }

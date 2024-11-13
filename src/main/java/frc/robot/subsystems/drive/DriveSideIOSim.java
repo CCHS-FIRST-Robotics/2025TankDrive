@@ -13,13 +13,13 @@ public class DriveSideIOSim implements DriveSideIO {
     private final PIDController PID;
     private final SimpleMotorFeedforward F;
 
-    // volts per rps
+    // volts per meters per second // ! change this too 
     private final double kP = 10;
     private final double kI = 0;
     private final double kD = 0;
     private final double kS = 0;
-    private final double kV = 2.54 * Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
-    private final double kA = 0.27 * Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
+    private final double kV = 2.54;
+    private final double kA = 0.27;
 
     Measure<Voltage> appliedVolts = Volts.of(0);
     Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
@@ -43,8 +43,8 @@ public class DriveSideIOSim implements DriveSideIO {
     @Override
     public void setVelocity(Measure<Velocity<Angle>> velocity){
         this.setVoltage(Volts.of(
-            PID.calculate(motor.getAngularVelocityRadPerSec(), velocity.in(RadiansPerSecond))
-            + F.calculate(currentSetpoint.in(RadiansPerSecond))
+            PID.calculate(motor.getAngularVelocityRPM() / 60, velocity.in(RotationsPerSecond))
+            + F.calculate(velocity.in(RotationsPerSecond))
         ));
         currentSetpoint = velocity;
     }
@@ -54,12 +54,13 @@ public class DriveSideIOSim implements DriveSideIO {
         motor.update(Constants.PERIOD);
 
         inputs.currentSetpoint = currentSetpoint.in(RotationsPerSecond);
-        inputs.distanceTraveled = motor.getAngularPositionRotations() * Constants.WHEEL_RADIUS * Constants.GEAR_RATIO;
+        inputs.distanceTraveled = motor.getAngularPositionRotations() * Constants.WHEEL_RADIUS.in(Meters) * Constants.GEAR_RATIO;
 
         inputs.motor1Current = motor.getCurrentDrawAmps();
         inputs.motor1Voltage = appliedVolts.in(Volts);
+        inputs.motor1Temperature = 0;
+
         inputs.motor1Position = motor.getAngularPositionRotations();
         inputs.motor1Velocity = motor.getAngularVelocityRPM() / 60;
-        inputs.motor1Temperature = 0;
     }
 }

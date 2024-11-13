@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
-
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.subsystems.drive.*; 
@@ -52,7 +49,5 @@ public class RobotContainer {
                 () -> controller.getRightX()
             )
         );
-
-        controller.b().onTrue(new InstantCommand(() -> drive.setVoltage(Volts.of(12), Volts.of(0))));
     }
 }

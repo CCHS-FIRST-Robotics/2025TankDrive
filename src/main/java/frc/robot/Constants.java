@@ -4,13 +4,17 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.units.*;
+
 public final class Constants {
     public static final double PERIOD = 0.02;
     public static enum Mode {REAL, SIM, REPLAY}
     public static final Mode MODE = Mode.REAL;
     
     public static final int CONTROLLER_PORT = 0;
-    public static final double ANALOG_DEADZONE = 0.1;
+    public static final double JOYSTICK_DEADZONE = 0.1;
     public static final double JOYSTICK_EXPONENT = 2;
 
     public static final int TALONSRX_ID_1 = 23;
@@ -18,8 +22,8 @@ public final class Constants {
     public static final int TALONSRX_ID_3 = 10;
     public static final int TALONSRX_ID_4 = 11;
 
-    public static final double TRACK_WIDTH = 0.66; // meters
-    public static final double WHEEL_RADIUS = 0.0762; // meters
-    public static final double GEAR_RATIO = 1/10.71; // !
-    public static final double MAX_SPEED = 0.6635294118; // meters per second
+    public static final Measure<Distance> TRACK_WIDTH = Centimeters.of(66); // ! check this again
+    public static final Measure<Distance> WHEEL_RADIUS = Inches.of(3);
+    public static final double GEAR_RATIO = 12.755; // for every GEAR_RATIO rotations of the input, the output rotates once
+    public static final Measure<Velocity<Distance>> MAX_SPEED = MetersPerSecond.of(3.334);
 }

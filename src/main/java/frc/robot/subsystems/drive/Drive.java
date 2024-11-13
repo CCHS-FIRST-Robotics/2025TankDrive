@@ -3,11 +3,10 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj2.command.*;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.*;
-import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.units.*;
+import org.littletonrobotics.junction.Logger;
 import frc.robot.Constants;
 
 public class Drive extends SubsystemBase{
@@ -64,16 +63,16 @@ public class Drive extends SubsystemBase{
 
         Measure<Velocity<Angle>> leftMotorVelocity = RadiansPerSecond.of(
             wheelSpeeds.leftMetersPerSecond 
-            / Constants.WHEEL_RADIUS // to get radians per second of the wheel
-            / Constants.GEAR_RATIO // to get radians per second of the motor
+            / Constants.WHEEL_RADIUS.in(Meters) // to get radians per second of the wheel
+            * Constants.GEAR_RATIO // to get radians per second of the motor
         );
         Measure<Velocity<Angle>> rightMotorVelocity = RadiansPerSecond.of(
             wheelSpeeds.rightMetersPerSecond 
-            / Constants.WHEEL_RADIUS // to get radians per second of the wheel
-            / Constants.GEAR_RATIO // to get radians per second of the motor
+            / Constants.WHEEL_RADIUS.in(Meters) // to get radians per second of the wheel
+            * Constants.GEAR_RATIO // to get radians per second of the motor
         );
 
-        lIO.setVelocity(leftMotorVelocity); // should be 88.83
+        lIO.setVelocity(leftMotorVelocity); // should be 88.83 rotations per second
         rIO.setVelocity(rightMotorVelocity);
     }
 }
