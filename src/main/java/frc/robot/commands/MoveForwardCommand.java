@@ -23,7 +23,7 @@ public class MoveForwardCommand extends Command {
     Measure<Velocity<Distance>> Mps;
     Measure<Distance> distance;
     boolean finished;
-    Measure<Angle> rotations;
+    Measure<Angle> target_Rotations;
     Measure<Angle> target_Angle;
     
 
@@ -38,7 +38,7 @@ public class MoveForwardCommand extends Command {
         this.Mps = Mps;
         this.distance = distance;
         this.finished = false;
-        this.rotations = Rotations.of(0);
+        this.target_Rotations = Rotations.of(0);
         this.target_Angle = Degrees.of(0);
 
     }
@@ -46,14 +46,15 @@ public class MoveForwardCommand extends Command {
     @Override
     public void initialize() {
         drive.setDriveBrakeMode(true);
-        rotations = Rotations.of(-((drive.getLeftRotations().in(Rotations) + drive.getRightRotations().in(Rotations)) / 2) + (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE)) ;
+
+        target_Rotations = Rotations.of(-((drive.getLeftRotations().in(Rotations) + drive.getRightRotations().in(Rotations)) / 2) + (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE)) ;
         target_Angle = Degrees.of(drive.getHeading() + angle.in(Degrees)); 
     }
 
     @Override
     public void execute() {
         
-        finished = drive.goForward(target_Angle, Mps, rotations);
+        finished = drive.goForward(target_Angle, Mps, target_Rotations);
 
     }
 

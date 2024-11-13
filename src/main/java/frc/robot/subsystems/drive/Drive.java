@@ -121,11 +121,10 @@ public class Drive extends SubsystemBase{
     }
 
 
-    public boolean goForward(Measure<Angle> angle, Measure<Velocity<Distance>> Mps, Measure<Angle> TargetRottions){
-        System.out.println("Running");
-
-        double driverr = (-((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) - TargetRottions.in(Rotations)) * Constants.WHEEL_CIRCUMFERENCE;
-        double turnerr =  angle.in(Degrees) - gyroInputs.heading;
+    public boolean goForward(Measure<Angle> target_angle, Measure<Velocity<Distance>> Mps, Measure<Angle> target_rotations){
+       
+        double driverr = (-((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) - target_rotations.in(Rotations)) * Constants.WHEEL_CIRCUMFERENCE;
+        double turnerr =  target_angle.in(Degrees) - gyroInputs.heading;
 
         double turnpidOutput = turn_pidController.calculate(turnerr);
         double drivepidOutput = MathUtil.clamp(distance_pidController.calculate(driverr), -Mps.in(MetersPerSecond), Mps.in(MetersPerSecond));
@@ -136,14 +135,13 @@ public class Drive extends SubsystemBase{
             turnpidOutput 
         );
         setVelocity(speeds);
-        Logger.recordOutput("drive/turnerr", turnerr);
-        Logger.recordOutput("drive/driveerr", driverr);
         Logger.recordOutput("drive/turn pid output", turnpidOutput );
         Logger.recordOutput("drive/drive pid output ", drivepidOutput );
-        Logger.recordOutput("drive/rotat ", TargetRottions );
-        Logger.recordOutput("drive/cutremt rotating", (lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations) / 2) * Constants.WHEEL_CIRCUMFERENCE  );
-        Logger.recordOutput("drive/speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE);
-        if(distance_pidController.atSetpoint()){
+        Logger.recordOutput("drive/target meters ", target_rotations.in(Rotations) * Constants.WHEEL_CIRCUMFERENCE);
+        Logger.recordOutput("drive/current rotations ",  ((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) * Constants.WHEEL_CIRCUMFERENCE);
+        Logger.recordOutput("drive/target rotations ", target_rotations );
+        Logger.recordOutput("drive/ speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE);
+        if(Math.abs(driverr) <= .3 && Math.abs(turnerr) <= 2 ){
             return true;
         }
         return false;
