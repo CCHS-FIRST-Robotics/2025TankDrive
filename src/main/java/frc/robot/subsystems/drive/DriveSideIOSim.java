@@ -58,8 +58,8 @@ public class DriveSideIOSim implements DriveSideIO {
         inputs.motor1Voltage = appliedVolts.in(Volts);
         inputs.motor1Temperature = 0;
 
-        inputs.motor1Position = motor.getAngularPositionRotations();
-        inputs.motor1Velocity = motor.getAngularVelocityRPM() / 60;
+        inputs.motor1Position = motor.getOutput(0); // gets the position in the units of the gains you give it
+        inputs.motor1Velocity = motor.getOutput(1);
         inputs.wheelPosition = inputs.motor1Position / Constants.GEAR_RATIO;
         inputs.wheelVelocity = inputs.motor1Velocity / Constants.GEAR_RATIO;
 
