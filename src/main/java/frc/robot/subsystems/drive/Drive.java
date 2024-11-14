@@ -135,13 +135,14 @@ public class Drive extends SubsystemBase{
             turnpidOutput 
         );
         setVelocity(speeds);
+        Logger.recordOutput("drive/turnerr", turnerr);
+        Logger.recordOutput("drive/driveerr", driverr);
         Logger.recordOutput("drive/turn pid output", turnpidOutput );
         Logger.recordOutput("drive/drive pid output ", drivepidOutput );
-        Logger.recordOutput("drive/target meters ", target_rotations.in(Rotations) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
-        Logger.recordOutput("drive/current rotations ",  ((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
-        Logger.recordOutput("drive/target rotations ", target_rotations );
-        Logger.recordOutput("drive/ speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
-        if(Math.abs(driverr) <= .3 && Math.abs(turnerr) <= 2 ){
+        Logger.recordOutput("drive/rotat ", TargetRottions );
+        Logger.recordOutput("drive/cutremt rotating", (lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations) / 2) * Constants.WHEEL_CIRCUMFERENCE  );
+        Logger.recordOutput("drive/speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE);
+        if(distance_pidController.atSetpoint()){
             return true;
         }
         return false;

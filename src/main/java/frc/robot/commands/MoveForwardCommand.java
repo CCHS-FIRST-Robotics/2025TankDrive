@@ -21,7 +21,7 @@ public class MoveForwardCommand extends Command {
     Measure<Velocity<Distance>> Mps;
     Measure<Distance> distance;
     boolean finished;
-    Measure<Angle> target_Rotations;
+    Measure<Angle> rotations;
     Measure<Angle> target_Angle;
     
 
@@ -36,7 +36,7 @@ public class MoveForwardCommand extends Command {
         this.Mps = Mps;
         this.distance = distance;
         this.finished = false;
-        this.target_Rotations = Rotations.of(0);
+        this.rotations = Rotations.of(0);
         this.target_Angle = Degrees.of(0);
 
     }
@@ -52,7 +52,7 @@ public class MoveForwardCommand extends Command {
     @Override
     public void execute() {
         
-        finished = drive.goForward(target_Angle, Mps, target_Rotations);
+        finished = drive.goForward(target_Angle, Mps, rotations);
 
     }
 
