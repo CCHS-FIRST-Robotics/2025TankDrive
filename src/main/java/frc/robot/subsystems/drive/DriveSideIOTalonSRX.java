@@ -33,6 +33,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         motor1.configFactoryDefault();
         motor1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor1.setSelectedSensorPosition(0);
+        motor1.setSensorPhase(false); // ! yeah check this
         motor1.setInverted(isInverted);
         motor2.follow(motor1);
         motor2.setInverted(InvertType.FollowMaster);

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  * to do: 
  * 
  * ! check the track width again
+ * ! check sensorphase with setvoltage
  * check the gear ratio by seeing if at 12V the encoder reads 6.9 (88.83/Gear_ratio) rotations per second
  * tune P
  * 
