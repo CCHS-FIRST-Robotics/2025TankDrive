@@ -1,19 +1,22 @@
 package frc.robot.subsystems.drive;
 
-import static edu.wpi.first.units.Units.*;
-
 import edu.wpi.first.units.*;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface DriveSideIO {
     @AutoLog
     public static class DriveSideIOInputs {
-        public Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0); // rotations per second
+        public double motor1Current = 0; // amps
+        public double motor1Voltage = 0; // volts
+        public double motor1Temperature = 0; // celcius
         
-        public Measure<Current> motorCurrent = Amps.of(0); // amps
-        public Measure<Voltage> motorVoltage = Volts.of(0); // volts
-        public Measure<Angle> motorPosition = Rotations.of(0); // rotations
-        public Measure<Velocity<Angle>> motorVelocity = RotationsPerSecond.of(0); // rotations per second
+        public double wheelPosition = 0; // rotations
+        public double wheelVelocity = 0; // rotations per second
+        public double motor1Position = 0; // rotations
+        public double motor1Velocity = 0; // rotations per second
+
+        public double currentSetpoint = 0; // rotations per second
+        public double distanceTraveled = 0; // meters
     }
 
     public default void setVoltage(Measure<Voltage> volts) {}

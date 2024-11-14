@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.*;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.drive.Drive;
@@ -9,9 +7,10 @@ import frc.robot.subsystems.drive.Drive;
 public class MoveForwardCommand extends Command {
     private final Drive drive;
 
-    int totalRotations = 7;
-    double leftRotations;
-    double rightRotations;
+    double wheelRotations = 5;
+
+    double leftWheelRotations;
+    double rightWheelRotations;
     
 
     public MoveForwardCommand(Drive drive) {
@@ -21,22 +20,23 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void initialize() {
+        
     }
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(0.3, 0, 0));
-        this.leftRotations = drive.getLeftEncoderRotations().in(Rotations);
-        this.rightRotations = drive.getRightEncoderRotations().in(Rotations);
+        drive.setVelocity(new ChassisSpeeds(0.5, 0, 0));
+        this.leftWheelRotations = drive.getLeftEncoderWheelRotations();
+        this.rightWheelRotations = drive.getRightEncoderWheelRotations();
 
-        System.out.println("Left Rotations: " + leftRotations);
-        System.out.println("Right Rotations: " + rightRotations);
+        System.out.println("Left Rotations: " + leftWheelRotations);
+        System.out.println("Right Rotations: " + rightWheelRotations);
 
     }
 
     @Override
     public boolean isFinished() {
-        return this.leftRotations > totalRotations && this.rightRotations > totalRotations;
+        return this.leftWheelRotations > wheelRotations && this.rightWheelRotations > wheelRotations;
     }
 
     /* 
@@ -45,4 +45,5 @@ public class MoveForwardCommand extends Command {
         drive.setVelocity(new ChassisSpeeds(0,0,0));
     }
     */
+
 }

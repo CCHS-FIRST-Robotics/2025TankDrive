@@ -1,12 +1,14 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.*;
-//import frc.robot.Constants.AutoPathConstants;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.MoveForwardCommand;
-import frc.robot.subsystems.drive.*;
-//import frc.robot.utils.AutoCommandSequenceBuilder; 
+import frc.robot.subsystems.drive.*; 
 
 public class RobotContainer {
     private final CommandXboxController controller = new CommandXboxController(Constants.CONTROLLER_PORT);
@@ -42,10 +44,17 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        drive.setDefaultCommand(new DriveWithJoysticks(drive, () -> -controller.getLeftY(),() -> controller.getRightX())); // controler throttle flipped
+        drive.setDefaultCommand(
+            new DriveWithJoysticks(
+                drive, 
+                () -> -controller.getLeftY(), // xboxcontroller is flipped
+                () -> controller.getRightX()
+            )
+        );
+
     }
 
-     public Command getAutonomousCommand() {
+    public Command getAutonomousCommand() {
         return new MoveForwardCommand(drive);
     }
 }

@@ -3,131 +3,72 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj2.command.*;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.*;
-import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.units.*;
+import org.littletonrobotics.junction.Logger;
 import frc.robot.Constants;
-//import frc.robot.utils.DriveTrajectory;
-//import frc.robot.utils.DriveTrajectoryGenerator;
-//import edu.wpi.first.math.geometry.Twist2d;
 
 public class Drive extends SubsystemBase{
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final DifferentialDriveOdometry odometry;
     private Pose2d robotPose2d = new Pose2d();
-    //CONTROL_MODE controlMode = CONTROL_MODE.DISABLED;
     
-    public final DriveSideIO lIO, rIO;
-    public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
+    private final DriveSideIO lIO, rIO;
+    private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
     private final DriveSideIOInputsAutoLogged lInputs = new DriveSideIOInputsAutoLogged();
     private final DriveSideIOInputsAutoLogged rInputs = new DriveSideIOInputsAutoLogged();
-
-    /*
-    private ArrayList<Pose2d> positionTrajectory = new ArrayList<Pose2d>();
-    private int trajectoryCounter = -1;
-    private int currentPathNum = 0;
-
-    public enum CONTROL_MODE {
-        DISABLED,
-        MODULE_SETPOINT,
-        CHASSIS_SETPOINT,
-        POSITION_SETPOINT,
-        CHARACTERIZING
-    };
-    */
 
     public Drive(GyroIO gyroIO, DriveSideIO leftIO, DriveSideIO rightIO) {
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
-
-        double leftUpdatedPos = 0; //but make sure encoders reset every deploy
-        double rightUpdatedPos = 0; //but make sure encoders reset every deploy
-
-        this.odometry = new DifferentialDriveOdometry(gyroInputs.rotation2D, leftUpdatedPos, rightUpdatedPos, new Pose2d(0, 0, new Rotation2d()));
+        this.odometry = new DifferentialDriveOdometry(new Rotation2d(), 0, 0, new Pose2d(0, 0, new Rotation2d())
+        );
     }
 
     @Override
     public void periodic() {
         gyroIO.updateInputs(gyroInputs);
+        robotPose2d = odometry.update(gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),lInputs.distanceTraveled, rInputs.distanceTraveled);
         lIO.updateInputs(lInputs);
         rIO.updateInputs(rInputs);
-
-        double leftUdatedPos = lInputs.motorPosition.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
-        double rightUpdatedPos = rInputs.motorPosition.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
-
-        robotPose2d = odometry.update(gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(), leftUdatedPos, rightUpdatedPos);
 
         Logger.processInputs("Gyro ", gyroInputs);
         Logger.recordOutput("RobotPose2D", robotPose2d);
         Logger.processInputs("Left side ", lInputs);
         Logger.processInputs("Right side ", rInputs);
-
-        /*
-        switch (controlMode) {
-            case DISABLED:
-                lIO.setVelocity(RotationsPerSecond.of(0));
-                rIO.setVelocity(RotationsPerSecond.of(0));
-        }
-        */
-      
     }
 
-    public void setVelocity(ChassisSpeeds speeds){
-        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
-
-        double leftRadPerSecond = wheelSpeeds.leftMetersPerSecond / Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
-        double rightRadPerSecond = wheelSpeeds.rightMetersPerSecond / Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
-        
-        lIO.setVelocity(RadiansPerSecond.of(leftRadPerSecond));
-        rIO.setVelocity(RadiansPerSecond.of(rightRadPerSecond));
+    public void setVoltage(Measure<Voltage> lVolts, Measure<Voltage> rVolts){
+        lIO.setVoltage(lVolts);
+        rIO.setVoltage(rVolts);
     }
 
+    public void setVelocity(ChassisSpeeds chassisSpeeds){
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
 
-    /*
-    public void runPosition(ArrayList<Pose2d> poseTrajectory, ArrayList<Twist2d> twistTrajectory) {
-        this.positionTrajectory = poseTrajectory;
-        trajectoryCounter = 0;
-    }
-    
+        Measure<Velocity<Angle>> leftMotorVelocity = RotationsPerSecond.of(
+            wheelSpeeds.leftMetersPerSecond 
+            / Constants.WHEEL_CIRCUMFERENCE.in(Meters) // to get rotations per second of the wheel
+            * Constants.GEAR_RATIO // to get rotations per second of the motor
+        );
+        Measure<Velocity<Angle>> rightMotorVelocity = RotationsPerSecond.of(
+            wheelSpeeds.rightMetersPerSecond 
+            / Constants.WHEEL_CIRCUMFERENCE.in(Meters) // to get rotations per second of the wheel
+            * Constants.GEAR_RATIO // to get rotations per second of the motor
+        );
 
-    public void runPosition(DriveTrajectory driveTrajectory) {
-        this.positionTrajectory = driveTrajectory.positionTrajectory;
-        trajectoryCounter = 0;
-    }
-
-    public Command followTrajectory(DriveTrajectory traj) {
-        return runOnce(
-                () -> {
-                    System.out.println("recording pos traj");
-                    Logger.recordOutput("Auto/GeneratedTrajectory",
-                            traj.positionTrajectory.toArray(new Pose2d[traj.positionTrajectory.size()]));
-                    runPosition(traj);
-                });
+        lIO.setVelocity(leftMotorVelocity); // should be 88.83 rotations per second
+        rIO.setVelocity(rightMotorVelocity);
     }
 
-    public Command followTrajectory(ArrayList<String> path) {
-        return runOnce(
-                () -> {
-                    DriveTrajectory traj = DriveTrajectoryGenerator.generateChoreoTrajectoryFromFile(path.get(currentPathNum));
-                    System.out.println("recording pos traj");
-                    Logger.recordOutput("Auto/GeneratedTrajectory",
-                            traj.positionTrajectory.toArray(new Pose2d[traj.positionTrajectory.size()]));
-                    currentPathNum++;
-                    runPosition(traj);
-                });
-    }
-    */
-
-
-    public Measure<Angle> getLeftEncoderRotations() {
-        return lInputs.motorPosition;
+    public double getLeftEncoderWheelRotations() {
+        return lInputs.wheelPosition;
     }
 
-    public Measure<Angle> getRightEncoderRotations() {
-        return rInputs.motorPosition;
+    public double getRightEncoderWheelRotations() {
+        return rInputs.wheelPosition;
     }
 }
