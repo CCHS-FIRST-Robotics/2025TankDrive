@@ -11,8 +11,6 @@ import edu.wpi.first.wpilibj.RobotBase;
  * 
  * tune P
  * 
- * check gyro logging
- * 
  * add twist support for sim
  */
 

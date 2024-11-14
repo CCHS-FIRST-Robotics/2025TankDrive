@@ -21,8 +21,8 @@ public class RobotContainer {
             case REAL: // real
                 drive = new Drive(
                     new GyroIONavX(),
-                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
-                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false, true), 
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true, true)
                 );
                 break;
             case SIM: // simulated
@@ -35,8 +35,8 @@ public class RobotContainer {
             default: // replayed
                 drive = new Drive(
                     new GyroIONavX(),
-                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
-                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false, true), 
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true, true)
                 );
                 break;
         }

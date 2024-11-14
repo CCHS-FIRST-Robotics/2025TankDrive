@@ -11,29 +11,28 @@ import frc.robot.Constants;
 public class DriveWithJoysticks extends Command{
     Drive drive;
     Supplier<Double> leftYSupplier;
-    Supplier<Double> leftXSupplier;
+    Supplier<Double> rightXSupplier;
 
     public DriveWithJoysticks(
         Drive drive,
         Supplier<Double> leftYSupplier,
-        Supplier<Double> leftXSupplier
+        Supplier<Double> rightXSupplier
     ){
         addRequirements(drive);
         this.drive = drive;
         this.leftYSupplier = leftYSupplier;
-        this.leftXSupplier = leftXSupplier;
+        this.rightXSupplier = rightXSupplier;
     }
 
     @Override
     public void execute() {
         double leftY = leftYSupplier.get();
-        double leftX = leftXSupplier.get();
+        double rightX = rightXSupplier.get();
 
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
             applyPreferences(leftY) * Constants.MAX_SPEED.in(MetersPerSecond),
             0, 
-            // applyPreferences(leftX) * 5 * -1 // chassisspeeds considers rotating clockwise as positive
-            0
+            applyPreferences(rightX) * 5 * -1 // chassisspeeds considers rotating clockwise as positive
         );
 
         drive.setVelocity(chassisSpeeds);

@@ -14,7 +14,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     private final SimpleMotorFeedforward F;
     int encoderTicks = 4096;
 
-    private final double kP = 0.5;
+    private final double kP = 0.0; // 25
     private final double kI = 0;
     private final double kD = 0;
     private final double kS = 0;
@@ -24,7 +24,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
     DriveSideIOInputs inputs = new DriveSideIOInputs();
     
-    public DriveSideIOTalonSRX(int id1, int id2, boolean isInverted){
+    public DriveSideIOTalonSRX(int id1, int id2, boolean isInverted, boolean isInPhase){
         motor1 = new TalonSRX(id1);
         motor2 = new TalonSRX(id2);
         PID = new PIDController(kP, kI, kD);
@@ -33,7 +33,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         motor1.configFactoryDefault();
         motor1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor1.setSelectedSensorPosition(0);
-        motor1.setSensorPhase(true); // ! yeah check this
+        motor1.setSensorPhase(isInPhase);
         motor1.setInverted(isInverted);
         motor2.follow(motor1);
         motor2.setInverted(InvertType.FollowMaster);
