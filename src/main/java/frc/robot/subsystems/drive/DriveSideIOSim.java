@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.math.controller.*;
-import edu.wpi.first.math.geometry.struct.Rotation2dStruct;
 import edu.wpi.first.math.system.plant.*;
 import edu.wpi.first.units.*;
 import frc.robot.Constants;
