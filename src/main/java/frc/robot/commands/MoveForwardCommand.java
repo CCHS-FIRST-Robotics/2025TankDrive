@@ -9,7 +9,7 @@ import frc.robot.subsystems.drive.Drive;
 public class MoveForwardCommand extends Command {
     private final Drive drive;
 
-    int totalRotations = 10;
+    int totalRotations = 7;
     double leftRotations;
     double rightRotations;
     
