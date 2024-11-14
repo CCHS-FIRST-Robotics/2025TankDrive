@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-import static edu.wpi.first.units.Units.MetersPerSecond;
+
 
 import java.util.function.Supplier;
 
@@ -99,10 +99,10 @@ public void execute() {
 
 
     public double applyPreferences(double input) {
-        if (Math.abs(input) < Constants.JOYSTICK_DEADZONE) {
+        if (Math.abs(input) < Constants.ANALOG_DEADZONE) {
             return 0; 
         }
-        return Math.signum(input) * Math.pow(Math.abs(input), Constants.JOYSTICK_EXPONENT) * Constants.MAX_SPEED.in(MetersPerSecond); // 4 meters per second
+        return Math.signum(input) * Math.pow(Math.abs(input), Constants.JOYSTICK_EXPONENT) * Constants.MAX_SPEED; // 4 meters per second
     }
 
     public void setTargetHeading(double headingdegress) {

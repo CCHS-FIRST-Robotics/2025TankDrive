@@ -54,8 +54,8 @@ public class Drive extends SubsystemBase{
        
         this.odometry = new DifferentialDriveOdometry(
             gyroInputs.connected ? new Rotation2d(gyroInputs.heading): new Rotation2d(),
-            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE.in(Meters),
-            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE.in(Meters),
+            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
+            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
             new Pose2d(0, 0, new Rotation2d())
            
 
@@ -71,23 +71,23 @@ public class Drive extends SubsystemBase{
         case REAL:{
         robotPose2d = odometry.update(
             gyroInputs.connected ? new Rotation2d(gyroInputs.heading): new Rotation2d(),
-            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE.in(Meters), 
-            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE.in(Meters)
+            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE, 
+            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE
         );
         break;
         }
         case SIM:{
-            double leftMeters = lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE.in(Meters);
-            double rightMeters = rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE.in(Meters);
+            double leftMeters = lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
+            double rightMeters = rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE;
 
             double averageMeters = (leftMeters + rightMeters) / 2;
 
             
-            Rotation2d simRotation = new Rotation2d(averageMeters / Constants.TRACK_WIDTH.in(Meters));
+            Rotation2d simRotation = new Rotation2d(averageMeters / Constants.TRACK_WIDTH);
             robotPose2d = odometry.update(
             simRotation,
-            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE.in(Meters), 
-            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE.in(Meters)
+            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE, 
+            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE
         );
         break;
         }
@@ -123,7 +123,7 @@ public class Drive extends SubsystemBase{
 
     public boolean goForward(Measure<Angle> target_angle, Measure<Velocity<Distance>> Mps, Measure<Angle> target_rotations){
        
-        double driverr = (-((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) - target_rotations.in(Rotations)) * Constants.WHEEL_CIRCUMFERENCE.in(Meters);
+        double driverr = (-((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) - target_rotations.in(Rotations)) * Constants.WHEEL_CIRCUMFERENCE;
         double turnerr =  target_angle.in(Degrees) - gyroInputs.heading;
 
         double turnpidOutput = turn_pidController.calculate(turnerr);
@@ -135,14 +135,13 @@ public class Drive extends SubsystemBase{
             turnpidOutput 
         );
         setVelocity(speeds);
-        Logger.recordOutput("drive/turnerr", turnerr);
-        Logger.recordOutput("drive/driveerr", driverr);
         Logger.recordOutput("drive/turn pid output", turnpidOutput );
         Logger.recordOutput("drive/drive pid output ", drivepidOutput );
-        Logger.recordOutput("drive/rotat ", TargetRottions );
-        Logger.recordOutput("drive/cutremt rotating", (lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations) / 2) * Constants.WHEEL_CIRCUMFERENCE  );
-        Logger.recordOutput("drive/speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE);
-        if(distance_pidController.atSetpoint()){
+        Logger.recordOutput("drive/target meters ", target_rotations.in(Rotations) * Constants.WHEEL_CIRCUMFERENCE);
+        Logger.recordOutput("drive/current rotations ",  ((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2) * Constants.WHEEL_CIRCUMFERENCE);
+        Logger.recordOutput("drive/target rotations ", target_rotations );
+        Logger.recordOutput("drive/ speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond) * Constants.WHEEL_CIRCUMFERENCE);
+        if(Math.abs(driverr) <= .3 && Math.abs(turnerr) <= 2 ){
             return true;
         }
         return false;
@@ -151,14 +150,40 @@ public class Drive extends SubsystemBase{
 
     
 
+    public boolean goToPositsion(Measure<Distance> x, Measure<Distance> y, Measure<Velocity<Distance>> Mps){
+        double targetX = x.in(Meters);
+        double targetY = y.in(Meters);
+        double currentX = robotPose2d.getX();
+        double currentY = robotPose2d.getY();
+        double Xmovment = targetX - currentX;
+        double Ymovement = targetY - currentY;
+        double targetTheta = Math.atan2(Ymovement, Xmovment);
+        double currentTheta = getHeading();
+        double ThetaMovement = targetTheta - currentTheta;
+        double distance = Math.sqrt(Math.pow(Xmovment, 2) + Math.pow(Ymovement, 2));
+        if ((lInputs.motor1Position.in(Rotations) + rInputs.motor1Position.in(Rotations)) / 2 >= (distance / Constants.WHEEL_CIRCUMFERENCE)) {
+            return true;
+        }
+        double pidOutput = turn_pidController.calculate(ThetaMovement);
+        ChassisSpeeds speeds = new ChassisSpeeds(
+            Mps.in(MetersPerSecond),
+            0, 
+            pidOutput);
+        setVelocity(speeds);
+        Logger.recordOutput("drive/err", distance);
+        Logger.recordOutput("drive/pid output", pidOutput );
+        Logger.recordOutput("drive/speed(MPS)", lInputs.motor1Velocity.in(RotationsPerSecond));
+        Logger.recordOutput("drive/Distance", distance);
+        return false;
+    }
     
 
 
     public void setVelocity(ChassisSpeeds speeds){
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
 
-        double leftRadiansPerSecond = wheelSpeeds.leftMetersPerSecond / Constants.WHEEL_RADIUS.in(Meters) / Constants.GEAR_RATIO;
-        double rightRadiansPerSecond = wheelSpeeds.rightMetersPerSecond / Constants.WHEEL_RADIUS.in(Meters) / Constants.GEAR_RATIO;
+        double leftRadiansPerSecond = wheelSpeeds.leftMetersPerSecond / Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
+        double rightRadiansPerSecond = wheelSpeeds.rightMetersPerSecond / Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
         
         lIO.setVelocity(RadiansPerSecond.of(leftRadiansPerSecond));
         rIO.setVelocity(RadiansPerSecond.of(rightRadiansPerSecond));

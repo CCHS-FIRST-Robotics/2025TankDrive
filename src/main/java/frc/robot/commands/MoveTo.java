@@ -45,7 +45,7 @@ public class MoveTo extends Command {
     public void initialize() {
         drive.setDriveBrakeMode(true);
 
-        target_Rotations = Rotations.of((Math.sqrt(Math.pow(x.in(Meters), 2) + Math.pow(y.in(Meters), 2))) / Constants.WHEEL_CIRCUMFERENCE.in(Meters));
+        target_Rotations = Rotations.of((Math.sqrt(Math.pow(x.in(Meters), 2) + Math.pow(y.in(Meters), 2))) / Constants.WHEEL_CIRCUMFERENCE);
         target_Angle = Degrees.of(Math.atan2(y.in(Meters), x.in(Meters)));
     }
 
