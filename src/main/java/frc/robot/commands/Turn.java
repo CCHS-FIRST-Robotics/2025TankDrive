@@ -6,15 +6,15 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.drive.Drive;
 
 public class Turn extends Command {
+
     private final Drive drive;
-
-    double wheelRotations = 5;
-
     Rotation2d angleRead;
+    double targetAngle;
     
 
-    public Turn(Drive drive) {
+    public Turn(Drive drive, double targetAngle) {
         this.drive = drive;
+        this.targetAngle *= Math.PI / 180;
         addRequirements(drive);
     }
 
@@ -25,14 +25,14 @@ public class Turn extends Command {
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(0, 0, 0.5));
+        drive.setVelocity(new ChassisSpeeds(0, 0, 1));
         this.angleRead = drive.getGyroRotation();
 
     }
 
     @Override
     public boolean isFinished() {
-        return this.angleRead.getRadians() > Math.PI/2;
+        return this.angleRead.getDegrees() == targetAngle;
     }
 
     /* 

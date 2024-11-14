@@ -56,6 +56,9 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new MoveForwardCommand(drive).andThen(new Turn(drive));
+        return new MoveForwardCommand(drive, 5)
+        .andThen(new Turn(drive, -Math.PI/2))
+        .andThen(new MoveForwardCommand(drive, 3))
+        .andThen(new Turn(drive, Math.PI/2));
     }
 }

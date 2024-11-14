@@ -7,14 +7,15 @@ import frc.robot.subsystems.drive.Drive;
 public class MoveForwardCommand extends Command {
     private final Drive drive;
 
-    double wheelRotations = 5;
+    double wheelRotations;
 
     double leftWheelRotations;
     double rightWheelRotations;
     
 
-    public MoveForwardCommand(Drive drive) {
+    public MoveForwardCommand(Drive drive, double wheelRotations) {
         this.drive = drive;
+        this.wheelRotations = wheelRotations;
         addRequirements(drive);
     }
 
@@ -25,7 +26,7 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(0.5, 0, 0));
+        drive.setVelocity(new ChassisSpeeds(0.7, 0, 0));
         this.leftWheelRotations = drive.getLeftEncoderWheelRotations();
         this.rightWheelRotations = drive.getRightEncoderWheelRotations();
 
