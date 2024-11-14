@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.MoveForwardCommand;
+import frc.robot.commands.Turn;
 import frc.robot.subsystems.drive.*; 
 
 public class RobotContainer {
@@ -55,6 +56,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new MoveForwardCommand(drive);
+        return new MoveForwardCommand(drive).andThen(new Turn(drive));
     }
 }

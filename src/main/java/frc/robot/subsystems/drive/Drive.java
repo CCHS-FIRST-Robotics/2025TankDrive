@@ -71,4 +71,8 @@ public class Drive extends SubsystemBase{
     public double getRightEncoderWheelRotations() {
         return rInputs.wheelPosition;
     }
+
+    public Rotation2d getGyroRotation() {
+        return gyroInputs.rotation2D;
+    }
 }
