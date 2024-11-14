@@ -9,7 +9,7 @@ import frc.robot.subsystems.drive.Drive;
 public class MoveForwardCommand extends Command {
     private final Drive drive;
 
-    int totalRotations = 5;
+    int totalRotations = 10;
     double leftRotations;
     double rightRotations;
     
@@ -26,8 +26,8 @@ public class MoveForwardCommand extends Command {
     @Override
     public void execute() {
         drive.setVelocity(new ChassisSpeeds(0.3, 0, 0));
-        this.leftRotations = Math.abs(drive.getLeftEncoderRotations().in(Rotations));
-        this.rightRotations = Math.abs(drive.getRightEncoderRotations().in(Rotations));
+        this.leftRotations = drive.getLeftEncoderRotations().in(Rotations);
+        this.rightRotations = drive.getRightEncoderRotations().in(Rotations);
 
         System.out.println("Left Rotations: " + leftRotations);
         System.out.println("Right Rotations: " + rightRotations);
