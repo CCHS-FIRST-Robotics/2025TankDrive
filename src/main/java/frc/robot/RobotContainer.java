@@ -45,14 +45,14 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        // drive.setDefaultCommand(
-        //     new DriveWithJoysticks(
-        //         drive, 
-        //         () -> -controller.getLeftY(), // xboxcontroller is flipped
-        //         () -> controller.getRightX()
-        //     )
-        // );
+        drive.setDefaultCommand(
+            new DriveWithJoysticks(
+                drive, 
+                () -> -controller.getLeftY(), // xboxcontroller is flipped
+                () -> controller.getRightX()
+            )
+        );
 
-        controller.b().onTrue(new InstantCommand(() -> drive.setVoltage(Volts.of(12), null)));
+        // controller.b().onTrue(new InstantCommand(() -> drive.setVoltage(Volts.of(12), Volts.of(12))));
     }
 }
