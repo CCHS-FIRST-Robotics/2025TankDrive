@@ -61,7 +61,7 @@ public class RobotContainer {
             )
         );
     
-        controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.4), Meters.of(2))); // should end up being exactly one rotation or something is wrong with values probaly constants will have to test pid first
+        controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.2), Meters.of(1))); // should end up being exactly one rotation or something is wrong with values probaly constants will have to test pid first
         controller.a().onTrue(new InstantCommand(() -> drive.setDriveBrakeMode(false)));
         controller.x().onTrue(new InstantCommand(()-> drive.setDriveBrakeMode(true)));
         //controller.y().onTrue(new MoveTo(drive, Meters.of(1), Meters.of(1), MetersPerSecond.of(.2))); // should end up being exactly one rotation or something is wrong with values probaly constants will have to test pid first
@@ -69,7 +69,7 @@ public class RobotContainer {
     }
     
         public Command getAutonomousCommand() {
-            return new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.4), Meters.of(2));
+            return new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.1), Meters.of(2));
         }
     
 
