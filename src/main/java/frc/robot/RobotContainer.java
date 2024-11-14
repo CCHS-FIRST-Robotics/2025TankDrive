@@ -15,6 +15,8 @@ import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.MoveForwardCommand;
 import frc.robot.commands.MoveTo;
 import frc.robot.subsystems.drive.*; 
+import edu.wpi.first.wpilibj2.command.Command;
+
 
 public class RobotContainer {
     private final CommandXboxController controller = new CommandXboxController(Constants.CONTROLLER_PORT);
@@ -65,4 +67,10 @@ public class RobotContainer {
         //controller.y().onTrue(new MoveTo(drive, Meters.of(1), Meters.of(1), MetersPerSecond.of(.2))); // should end up being exactly one rotation or something is wrong with values probaly constants will have to test pid first
         //return new MoveTo(drive, Meters.of(3), Meters.of(2), MetersPerSecond.of(1));
     }
+    
+        public Command getAutonomousCommand() {
+            return new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.4), Meters.of(2));
+        }
+    
+
 }
