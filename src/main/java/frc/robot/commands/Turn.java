@@ -1,6 +1,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+
+import javax.management.remote.TargetedNotification;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.drive.Drive;
@@ -25,14 +28,18 @@ public class Turn extends Command {
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(0, 0, 1));
+        if(targetAngle<0){
+            drive.setVelocity(new ChassisSpeeds(0, 0, -1));
+        }else{
+            drive.setVelocity(new ChassisSpeeds(0, 0, 1));
+        }
         this.angleRead = drive.getGyroRotation();
 
     }
 
     @Override
     public boolean isFinished() {
-        return this.angleRead.getDegrees() == targetAngle;
+        return Math.abs(this.angleRead.getDegrees()) > targetAngle;
     }
 
     /* 

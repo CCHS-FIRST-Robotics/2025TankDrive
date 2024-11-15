@@ -14,7 +14,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     private final SimpleMotorFeedforward F;
     int encoderTicks = 4096;
 
-    private final double kP = 0.5;
+    private final double kP = 0.25;
     private final double kI = 0;
     private final double kD = 0;
     private final double kS = 0;
