@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-import javax.management.remote.TargetedNotification;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.drive.Drive;
@@ -39,7 +37,7 @@ public class Turn extends Command {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(this.angleRead.getDegrees()) > targetAngle;
+        return Math.abs(this.angleRead.getDegrees()) >= targetAngle;
     }
 
     /* 
