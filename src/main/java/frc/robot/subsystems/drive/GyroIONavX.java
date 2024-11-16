@@ -13,5 +13,6 @@ public class GyroIONavX implements GyroIO {
     public void updateInputs(GyroIOInputs inputs) {
         inputs.connected = navx.isConnected();
         inputs.rotation2D = navx.getRotation2d();
+        inputs.heading = navx.getAngle();
     }
 }

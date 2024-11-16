@@ -3,6 +3,8 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.units.*;
@@ -14,6 +16,14 @@ public class Drive extends SubsystemBase{
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final DifferentialDriveOdometry odometry;
     private Pose2d robotPose2d = new Pose2d();
+    double turn_Kp;
+    double turn_Ki;
+    double turn_Kd;
+    double distance_Kp;
+    double distance_Ki;
+    double distance_Kd;
+    private final PIDController turn_pidController;
+    private final PIDController distance_pidController;
     
     private final DriveSideIO lIO, rIO;
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
@@ -28,6 +38,14 @@ public class Drive extends SubsystemBase{
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
+        this.turn_Kp = .1;
+        this.turn_Ki = 0.0;
+        this.turn_Kd = 0.01;
+        this.distance_Kp = 10;
+        this.distance_Ki = 0.0;
+        this.distance_Kd = 0.00;
+        this.turn_pidController = new PIDController(turn_Kp, turn_Ki, turn_Kd);
+        this.distance_pidController = new PIDController(distance_Kp, distance_Ki, distance_Kd);
         this.odometry = new DifferentialDriveOdometry(
             new Rotation2d(), 
             0, 
@@ -57,6 +75,44 @@ public class Drive extends SubsystemBase{
         lIO.setVoltage(lVolts);
         rIO.setVoltage(rVolts);
     }
+
+    public double getLeftRotations(){
+        return lInputs.wheelPosition;
+    }
+
+    public double getRightRotations(){
+        return rInputs.wheelPosition;
+    }
+
+    public double getHeading(){
+        return gyroInputs.heading;
+    }
+
+     public boolean goForward(Measure<Angle> target_angle, Measure<Velocity<Distance>> Mps, Measure<Angle> target_rotations){
+       
+        double driverr = (-((lInputs.motor1Position + rInputs.motor1Position) / 2) - target_rotations.in(Rotations)) * Constants.WHEEL_CIRCUMFERENCE.in(Meters);
+        double turnerr =  target_angle.in(Degrees) - gyroInputs.heading;
+
+        double turnpidOutput = turn_pidController.calculate(turnerr);
+        double drivepidOutput = MathUtil.clamp(distance_pidController.calculate(driverr), -Mps.in(MetersPerSecond), Mps.in(MetersPerSecond));
+
+        ChassisSpeeds speeds = new ChassisSpeeds(
+            drivepidOutput,
+            0, 
+            turnpidOutput 
+        );
+        setVelocity(speeds);
+        Logger.recordOutput("drive/turn pid output", turnpidOutput );
+        Logger.recordOutput("drive/drive pid output ", drivepidOutput );
+        Logger.recordOutput("drive/target meters ", target_rotations.in(Rotations) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
+        Logger.recordOutput("drive/current rotations ",  ((lInputs.motor1Position + rInputs.motor1Position) / 2) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
+        Logger.recordOutput("drive/target rotations ", target_rotations );
+        Logger.recordOutput("drive/ speed(MPS)", lInputs.motor1Velocity * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
+        if(driverr <= 1){
+            return true;
+        }
+        return false;
+        }
 
     public void setVelocity(ChassisSpeeds chassisSpeeds){
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);

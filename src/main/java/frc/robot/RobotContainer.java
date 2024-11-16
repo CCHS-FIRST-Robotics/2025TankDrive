@@ -6,9 +6,10 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.DriveWithJoysticks;
+import frc.robot.commands.MoveForwardCommand;
 import frc.robot.subsystems.drive.*; 
 
 public class RobotContainer {
@@ -53,6 +54,6 @@ public class RobotContainer {
             )
         );
 
-        // controller.b().onTrue(new InstantCommand(() -> drive.setVoltage(Volts.of(12), Volts.of(12))));
+        controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.2), Meters.of(1)));
     }
 }
