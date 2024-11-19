@@ -90,7 +90,7 @@ public class Drive extends SubsystemBase{
 
      public boolean goForward(Measure<Angle> target_angle, Measure<Velocity<Distance>> Mps, Measure<Angle> target_rotations){
        
-        double driverr = (-((lInputs.motor1Position + rInputs.motor1Position) / 2) - target_rotations.in(Rotations)) * Constants.WHEEL_CIRCUMFERENCE.in(Meters);
+        double driverr = (((lInputs.motor1Position + rInputs.motor1Position) / 2) - target_rotations.in(Rotations));
         double turnerr =  target_angle.in(Degrees) - gyroInputs.heading;
 
         double turnpidOutput = turn_pidController.calculate(turnerr);
@@ -102,7 +102,7 @@ public class Drive extends SubsystemBase{
             turnpidOutput 
         );
         setVelocity(speeds);
-        Logger.recordOutput("drive/turn pid output", turnpidOutput );
+        Logger.recordOutput("drive/turn pid output", driverr );
         Logger.recordOutput("drive/drive pid output ", drivepidOutput );
         Logger.recordOutput("drive/target meters ", target_rotations.in(Rotations) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
         Logger.recordOutput("drive/current rotations ",  ((lInputs.motor1Position + rInputs.motor1Position) / 2) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
