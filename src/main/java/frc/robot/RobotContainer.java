@@ -54,6 +54,6 @@ public class RobotContainer {
             )
         );
 
-        controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.2), Meters.of(1)));
+        controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(90), MetersPerSecond.of(.2), Meters.of(0)));
     }
 }

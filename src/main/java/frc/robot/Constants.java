@@ -11,7 +11,7 @@ import edu.wpi.first.units.*;
 public final class Constants {
     public static final double PERIOD = 0.02;
     public static enum Mode {REAL, SIM, REPLAY}
-    public static final Mode MODE = Mode.SIM;
+    public static final Mode MODE = Mode.REAL;
     
     public static final int CONTROLLER_PORT = 0;
     public static final double JOYSTICK_DEADZONE = 0.1;
