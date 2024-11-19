@@ -7,44 +7,35 @@ import frc.robot.subsystems.drive.Drive;
 public class MoveForwardCommand extends Command {
     private final Drive drive;
 
-    double wheelRotationsTarget;
-
-    double leftWheelRotations;
-    double rightWheelRotations;
-
     double distanceTarget; 
+
+    double leftStartingDistance; 
+    double rightStartingDistance; 
 
     double leftDistance;
     double rightDistance;
     
-    public MoveForwardCommand(Drive drive, double wheelRotations) {
+    public MoveForwardCommand(Drive drive, double distanceTarget) {
         this.drive = drive;
-        this.wheelRotationsTarget = wheelRotations;
+        this.distanceTarget = distanceTarget;
         addRequirements(drive);
     }
 
     @Override
     public void initialize() {
-        
+        leftStartingDistance = drive.getLeftEncoderDistance();
+        rightStartingDistance = drive.getRightEncoderDistance();
     }
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(0.8 * (wheelRotationsTarget > 0 ? 1 : -1), 0, 0));
-        leftWheelRotations = drive.getLeftEncoderWheelRotations();
-        rightWheelRotations = drive.getRightEncoderWheelRotations();
+        drive.setVelocity(new ChassisSpeeds(0.8 * (distanceTarget > 0 ? 1 : -1), 0, 0));
+        leftDistance = drive.getLeftEncoderDistance() - leftStartingDistance;
+        rightDistance = drive.getRightEncoderDistance() - rightStartingDistance;
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(leftWheelRotations) > Math.abs(wheelRotationsTarget) && Math.abs(rightWheelRotations) > Math.abs(wheelRotationsTarget);
+        return Math.abs(leftDistance) > Math.abs(distanceTarget) || Math.abs(rightDistance) > Math.abs(distanceTarget);
     }
-
-    /* 
-    @Override
-    public void end (boolean interrupted) {
-        drive.setVelocity(new ChassisSpeeds(0,0,0));
-    }
-    */
-
 }

@@ -64,14 +64,6 @@ public class Drive extends SubsystemBase{
         rIO.setVelocity(rightMotorVelocity);
     }
 
-    public double getLeftEncoderWheelRotations() {
-        return lInputs.wheelPosition;
-    }
-
-    public double getRightEncoderWheelRotations() {
-        return rInputs.wheelPosition;
-    }
-
     public double getLeftEncoderDistance() {
         return lInputs.distanceTraveled;
     }

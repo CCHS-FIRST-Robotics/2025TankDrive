@@ -17,8 +17,7 @@ public class Turn extends Command {
     }
 
     @Override
-    public void initialize() {
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
@@ -28,14 +27,6 @@ public class Turn extends Command {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(angleRead.getDegrees()) > Math.abs(targetAngle);
+        return targetAngle > 0 ? angleRead.getDegrees() > targetAngle : angleRead.getDegrees() < targetAngle;
     }
-
-    /* 
-    @Override
-    public void end (boolean interrupted) {
-        drive.setVelocity(new ChassisSpeeds(0,0,0));
-    }
-    */
-
 }
