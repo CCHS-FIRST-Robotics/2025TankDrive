@@ -72,6 +72,14 @@ public class Drive extends SubsystemBase{
         return rInputs.wheelPosition;
     }
 
+    public double getLeftEncoderDistance() {
+        return lInputs.distanceTraveled;
+    }
+
+    public double getRightEncoderDistance() {
+        return rInputs.distanceTraveled;
+    }
+
     public Rotation2d getGyroRotation() {
         return gyroInputs.rotation2D;
     }

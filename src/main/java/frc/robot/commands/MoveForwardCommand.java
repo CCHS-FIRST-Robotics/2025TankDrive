@@ -7,14 +7,19 @@ import frc.robot.subsystems.drive.Drive;
 public class MoveForwardCommand extends Command {
     private final Drive drive;
 
-    double wheelRotations;
+    double wheelRotationsTarget;
 
     double leftWheelRotations;
     double rightWheelRotations;
+
+    double distanceTarget; 
+
+    double leftDistance;
+    double rightDistance;
     
     public MoveForwardCommand(Drive drive, double wheelRotations) {
         this.drive = drive;
-        this.wheelRotations = wheelRotations;
+        this.wheelRotationsTarget = wheelRotations;
         addRequirements(drive);
     }
 
@@ -25,14 +30,14 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(0.7 * (wheelRotations > 0 ? 1 : -1), 0, 0));
-        this.leftWheelRotations = drive.getLeftEncoderWheelRotations();
-        this.rightWheelRotations = drive.getRightEncoderWheelRotations();
+        drive.setVelocity(new ChassisSpeeds(0.8 * (wheelRotationsTarget > 0 ? 1 : -1), 0, 0));
+        leftWheelRotations = drive.getLeftEncoderWheelRotations();
+        rightWheelRotations = drive.getRightEncoderWheelRotations();
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(this.leftWheelRotations) > Math.abs(wheelRotations) && Math.abs(this.rightWheelRotations) > Math.abs(wheelRotations);
+        return Math.abs(leftWheelRotations) > Math.abs(wheelRotationsTarget) && Math.abs(rightWheelRotations) > Math.abs(wheelRotationsTarget);
     }
 
     /* 
