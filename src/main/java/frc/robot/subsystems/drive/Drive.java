@@ -90,7 +90,7 @@ public class Drive extends SubsystemBase{
 
      public boolean goForward(Measure<Angle> target_angle, Measure<Velocity<Distance>> Mps, Measure<Angle> target_rotations){
        
-        double driverr = (((lInputs.motor1Position + rInputs.motor1Position) / 2) - target_rotations.in(Rotations));
+        double driverr = ((target_rotations.in(Rotations) - (lInputs.motor1Position + rInputs.motor1Position) / 2));
         double turnerr =  target_angle.in(Degrees) - gyroInputs.heading;
 
         double turnpidOutput = turn_pidController.calculate(turnerr);
