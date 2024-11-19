@@ -6,9 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.*;
-import frc.robot.commands.DriveWithJoysticks;
-import frc.robot.commands.MoveForwardCommand;
-import frc.robot.commands.Turn;
+import frc.robot.commands.*;
 import frc.robot.subsystems.drive.*; 
 
 public class RobotContainer {
@@ -52,13 +50,13 @@ public class RobotContainer {
                 () -> controller.getRightX()
             )
         );
-
     }
 
     public Command getAutonomousCommand() {
-        return new MoveForwardCommand(drive, 5)
-        .andThen(new Turn(drive, -90))
-        .andThen(new MoveForwardCommand(drive, 3))
-        .andThen(new Turn(drive, 90));
+        return new Turn(drive, -90);
+        // return new MoveForwardCommand(drive, 5)
+        // .andThen(new Turn(drive, -90))
+        // .andThen(new MoveForwardCommand(drive, 3))
+        // .andThen(new Turn(drive, 90));
     }
 }
