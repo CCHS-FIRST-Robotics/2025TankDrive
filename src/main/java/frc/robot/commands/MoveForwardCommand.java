@@ -12,7 +12,6 @@ public class MoveForwardCommand extends Command {
     double leftWheelRotations;
     double rightWheelRotations;
     
-
     public MoveForwardCommand(Drive drive, double wheelRotations) {
         this.drive = drive;
         this.wheelRotations = wheelRotations;
@@ -26,18 +25,14 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(0.7, 0, 0));
+        drive.setVelocity(new ChassisSpeeds(0.7 * (wheelRotations > 0 ? 1 : -1), 0, 0));
         this.leftWheelRotations = drive.getLeftEncoderWheelRotations();
         this.rightWheelRotations = drive.getRightEncoderWheelRotations();
-
-        System.out.println("Left Rotations: " + leftWheelRotations);
-        System.out.println("Right Rotations: " + rightWheelRotations);
-
     }
 
     @Override
     public boolean isFinished() {
-        return this.leftWheelRotations > wheelRotations && this.rightWheelRotations > wheelRotations;
+        return Math.abs(this.leftWheelRotations) > Math.abs(wheelRotations) && Math.abs(this.rightWheelRotations) > Math.abs(wheelRotations);
     }
 
     /* 

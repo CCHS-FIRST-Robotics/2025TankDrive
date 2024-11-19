@@ -32,8 +32,7 @@ public class DriveWithJoysticks extends Command{
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
             applyPreferences(leftY) * Constants.MAX_SPEED.in(MetersPerSecond),
             0, 
-            // applyPreferences(leftX) * 5 * -1 // chassisspeeds considers rotating clockwise as positive
-            0
+            applyPreferences(leftX) * 5 * -1 // chassisspeeds considers rotating clockwise as positive
         );
 
         drive.setVelocity(chassisSpeeds);

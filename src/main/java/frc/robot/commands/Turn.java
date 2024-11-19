@@ -7,7 +7,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.drive.Drive;
 
 public class Turn extends Command {
-
     private final Drive drive;
     Rotation2d angleRead;
     double targetAngle;
@@ -21,23 +20,18 @@ public class Turn extends Command {
 
     @Override
     public void initialize() {
-        
     }
 
     @Override
     public void execute() {
-        if(targetAngle<0){
-            drive.setVelocity(new ChassisSpeeds(0, 0, -1));
-        }else{
-            drive.setVelocity(new ChassisSpeeds(0, 0, 1));
-        }
-        this.angleRead = drive.getGyroRotation();
+        drive.setVelocity(new ChassisSpeeds(0, 0, (targetAngle > 0 ? -1 : 1)));
 
+        this.angleRead = drive.getGyroRotation();
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(this.angleRead.getDegrees()) >= targetAngle;
+        return Math.abs(this.angleRead.getDegrees()) > Math.abs(targetAngle);
     }
 
     /* 
