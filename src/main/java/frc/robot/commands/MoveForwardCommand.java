@@ -36,7 +36,7 @@ public class MoveForwardCommand extends Command {
         this.Mps = Mps;
         this.distance = distance;
         this.finished = false;
-        this.target_Rotations = Rotations.of(0);
+        this.target_Rotations = Meters.of(0);
         this.target_Angle = Degrees.of(0);
 
     }
