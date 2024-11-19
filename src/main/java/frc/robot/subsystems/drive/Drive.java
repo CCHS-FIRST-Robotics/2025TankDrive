@@ -108,7 +108,7 @@ public class Drive extends SubsystemBase{
         Logger.recordOutput("drive/current rotations ",  ((lInputs.motor1Position + rInputs.motor1Position) / 2) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
         Logger.recordOutput("drive/target rotations ", target_rotations );
         Logger.recordOutput("drive/ speed(MPS)", lInputs.motor1Velocity * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
-        if(driverr <= 1){
+        if(driverr <= .1){
             return true;
         }
         return false;
