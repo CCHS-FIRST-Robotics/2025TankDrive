@@ -23,8 +23,8 @@ public class Drive extends SubsystemBase{
     public Drive(
         GyroIO gyroIO, 
         DriveSideIO leftIO, 
-        DriveSideIO rightIO)
-    {
+        DriveSideIO rightIO
+    ) {
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;

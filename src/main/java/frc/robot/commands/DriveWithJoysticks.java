@@ -17,7 +17,7 @@ public class DriveWithJoysticks extends Command{
         Drive drive,
         Supplier<Double> leftYSupplier,
         Supplier<Double> rightXSupplier
-    ){
+    ) {
         addRequirements(drive);
         this.drive = drive;
         this.leftYSupplier = leftYSupplier;
