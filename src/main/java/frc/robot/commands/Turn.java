@@ -21,7 +21,7 @@ public class Turn extends Command {
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(0, 0, 2 * (targetAngle > 0 ? 1 : -1)));
+        drive.setVelocity(new ChassisSpeeds(0, 0, 1.5 * (targetAngle > 0 ? 1 : -1)));
         angleRead = drive.getGyroRotation();
     }
 

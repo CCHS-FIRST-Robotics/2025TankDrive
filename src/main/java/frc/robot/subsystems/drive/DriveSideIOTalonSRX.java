@@ -18,7 +18,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     private final double kI = 0;
     private final double kD = 0;
     private final double kS = 0;
-    private final double kV = 0.14; // at 88.83 rotations per second, output 12 volts
+    private final double kV = 0.135; // at 88.83 rotations per second, output 12 volts
     private final double kA = 0;
 
     Measure<Velocity<Angle>> currentSetpoint = RotationsPerSecond.of(0);
