@@ -32,9 +32,9 @@ public class MoveForwardCommand extends Command {
         Measure<Distance> distance) {
 
         this.drive = drive;
-        this.angle = angle;
-        this.Mps = Mps;
-        this.distance = distance;
+        this.angle = angle; //0
+        this.Mps = Mps; //.2
+        this.distance = distance; //1
         this.finished = false;
         this.target_Rotations = Rotations.of(0);
         this.target_Angle = Degrees.of(0);
@@ -43,7 +43,7 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void initialize() {
-        target_Rotations = Rotations.of(((drive.getLeftRotations() + drive.getRightRotations()) / 2) + (this.distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE.in(Meters)));
+        target_Rotations = Rotations.of(((drive.getLeftRotations() + drive.getRightRotations()) / 2) + (distance.in(Meters) / Constants.WHEEL_CIRCUMFERENCE.in(Meters)));
         target_Angle = Degrees.of(drive.getHeading() + angle.in(Degrees)); 
     }
 
