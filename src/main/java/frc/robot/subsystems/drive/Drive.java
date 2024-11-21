@@ -102,13 +102,15 @@ public class Drive extends SubsystemBase{
             turnpidOutput 
         );
         setVelocity(speeds);
-        Logger.recordOutput("drive/turn pid output", driverr );
+        Logger.recordOutput("drive/drive err", driverr );
         Logger.recordOutput("drive/drive pid output ", drivepidOutput );
         Logger.recordOutput("drive/target meters ", target_rotations.in(Rotations) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
         Logger.recordOutput("drive/current rotations ",  ((lInputs.motor1Position + rInputs.motor1Position) / 2) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
         Logger.recordOutput("drive/target rotations ", target_rotations );
-        Logger.recordOutput("drive/ speed(MPS)", lInputs.motor1Velocity * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
-        if(driverr <= .1){
+        Logger.recordOutput("drive/turn err", turnerr);
+        Logger.recordOutput("drive/turn err cutoff", 1);
+        Logger.recordOutput("drive/drive err cutoff", .1);
+        if(driverr <= .1 && turnerr <= 1 ){
             return true;
         }
         return false;
