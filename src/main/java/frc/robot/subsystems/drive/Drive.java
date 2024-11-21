@@ -38,8 +38,8 @@ public class Drive extends SubsystemBase{
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
-        this.turn_Kp = .1;
-        this.turn_Ki = 0.0;
+        this.turn_Kp = .01;
+        this.turn_Ki = 0.01;
         this.turn_Kd = 0.01;
         this.distance_Kp = 10;
         this.distance_Ki = 0.0;
@@ -76,41 +76,41 @@ public class Drive extends SubsystemBase{
         rIO.setVoltage(rVolts);
     }
 
-    public double getLeftRotations(){
-        return lInputs.wheelPosition;
+    public double getlefttravelled(){
+        return lInputs.distanceTraveled;
     }
 
-    public double getRightRotations(){
-        return rInputs.wheelPosition;
+    public double getrighttravelled(){
+        return rInputs.distanceTraveled;
     }
 
     public double getHeading(){
         return gyroInputs.heading;
     }
 
-     public boolean goForward(Measure<Angle> target_angle, Measure<Velocity<Distance>> Mps, Measure<Angle> target_rotations){
+     public boolean goForward(Measure<Angle> target_angle, Measure<Velocity<Distance>> Mps, Measure<Distance> target_meters){
        
-        double driverr = (target_rotations.in(Rotations) - ((lInputs.motor1Position + rInputs.motor1Position) / 2));
+        //double driverr = (target_rotations.in(Rotations) - ((lInputs.motor1Position + rInputs.motor1Position) / 2));
+        double driverr = (target_meters.in(Meters)) - ((lInputs.distanceTraveled + rInputs.distanceTraveled) / 2);
         double turnerr =  target_angle.in(Degrees) - gyroInputs.heading;
 
         double turnpidOutput = turn_pidController.calculate(turnerr);
         double drivepidOutput = MathUtil.clamp(distance_pidController.calculate(driverr), -Mps.in(MetersPerSecond), Mps.in(MetersPerSecond));
 
         ChassisSpeeds speeds = new ChassisSpeeds(
-            drivepidOutput,
+            -drivepidOutput,
             0, 
             turnpidOutput 
         );
         setVelocity(speeds);
         Logger.recordOutput("drive/drive err", driverr );
         Logger.recordOutput("drive/drive pid output ", drivepidOutput );
-        Logger.recordOutput("drive/target meters ", target_rotations.in(Rotations) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
+       
         Logger.recordOutput("drive/current rotations ",  ((lInputs.motor1Position + rInputs.motor1Position) / 2) * Constants.WHEEL_CIRCUMFERENCE.in(Meters));
-        Logger.recordOutput("drive/target rotations ", target_rotations );
         Logger.recordOutput("drive/turn err", turnerr);
         Logger.recordOutput("drive/turn err cutoff", 1);
         Logger.recordOutput("drive/drive err cutoff", .1);
-        if(driverr <= .1 && turnerr <= 1 ){
+        if(driverr <= .01 && turnerr <= 1 ){
             return true;
         }
         return false;
