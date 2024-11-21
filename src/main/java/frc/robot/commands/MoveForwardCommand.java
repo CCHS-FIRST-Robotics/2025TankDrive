@@ -32,9 +32,9 @@ public class MoveForwardCommand extends Command {
         Measure<Distance> distance) {
 
         this.drive = drive;
-        this.angle = angle; //0
-        this.Mps = Mps; //.2
-        this.distance = distance; //1
+        this.angle = angle;
+        this.Mps = Mps; 
+        this.distance = distance; 
         this.finished = false;
         this.target_Rotations = Rotations.of(0);
         this.target_Angle = Degrees.of(0);
