@@ -53,10 +53,11 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-         return new MoveForwardCommand(drive, 8.7)
+         return new MoveForwardCommand(drive, 7.5)
          .andThen(new Turn(drive, -90))
          .andThen(new MoveForwardCommand(drive, 1.5))
          .andThen(new Turn(drive, -180))
-         .andThen(new MoveForwardCommand(drive, 8.7));
+         .andThen(new MoveForwardCommand(drive, 6));
+         
     }
 }

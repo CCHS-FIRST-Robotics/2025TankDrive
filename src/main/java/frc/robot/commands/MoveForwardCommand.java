@@ -29,7 +29,7 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(0.8 * (distanceTarget > 0 ? 1 : -1), 0, 0));
+        drive.setVelocity(new ChassisSpeeds(0.7 * (distanceTarget > 0 ? 1 : -1), 0, 0));
         leftDistance = drive.getLeftEncoderDistance() - leftStartingDistance;
         rightDistance = drive.getRightEncoderDistance() - rightStartingDistance;
     }
