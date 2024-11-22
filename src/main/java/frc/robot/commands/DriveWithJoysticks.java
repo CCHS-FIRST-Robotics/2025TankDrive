@@ -19,6 +19,9 @@ public class DriveWithJoysticks extends Command{
         Supplier<Double> leftXSupplier
     ){
         addRequirements(drive);
+        this.Kp = .08;
+        this.Ki = 0.0;
+        this.Kd = 0.01;
         this.drive = drive;
         this.leftYSupplier = leftYSupplier;
         this.leftXSupplier = leftXSupplier;
