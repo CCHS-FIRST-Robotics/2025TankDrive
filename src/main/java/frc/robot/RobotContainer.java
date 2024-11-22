@@ -64,16 +64,5 @@ public class RobotContainer {
         .andThen(new MoveForwardCommand(drive, Degrees.of(90), Meters.of(0), MetersPerSecond.of(.1), DegreesPerSecond.of(0)))
         .andThen(new MoveForwardCommand(drive, Degrees.of(90), Meters.of(0), MetersPerSecond.of(.1), DegreesPerSecond.of(0)))
         .andThen(new MoveForwardCommand(drive, Degrees.of(90), Meters.of(0), MetersPerSecond.of(.1), DegreesPerSecond.of(0))));
-        //controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(90), MetersPerSecond.of(.1), Meters.of(0)));
-
-
-        controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.5), Meters.of(2)) 
-        .andThen(new MoveForwardCommand(drive, Degrees.of(90), MetersPerSecond.of(.1), Meters.of(0)))
-        .andThen(new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.5), Meters.of(1)))
-        .andThen(new MoveForwardCommand(drive, Degrees.of(90), MetersPerSecond.of(.1), Meters.of(0)))
-        .andThen(new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.5), Meters.of(2)))
-        .andThen(new MoveForwardCommand(drive, Degrees.of(90), MetersPerSecond.of(.1), Meters.of(0)))
-        .andThen(new MoveForwardCommand(drive, Degrees.of(0), MetersPerSecond.of(.2), Meters.of(1)))
-        .andThen(new MoveForwardCommand(drive, Degrees.of(90), MetersPerSecond.of(.1), Meters.of(0))));
     }
     }
