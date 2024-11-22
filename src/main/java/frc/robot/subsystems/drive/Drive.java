@@ -22,6 +22,7 @@ public class Drive extends SubsystemBase{
     double distance_Kp;
     double distance_Ki;
     double distance_Kd;
+    ChassisSpeeds speeds;
     private final PIDController turn_pidController;
     private final PIDController distance_pidController;
     
@@ -50,7 +51,12 @@ public class Drive extends SubsystemBase{
             new Rotation2d(), 
             0, 
             0, 
-            new Pose2d(0, 0, new Rotation2d())
+            new Pose2d(0, 0, new Rotation2d()));
+
+        speeds = new ChassisSpeeds(
+            0,
+            0, 
+            0 
         );
     }
 
@@ -88,20 +94,29 @@ public class Drive extends SubsystemBase{
         return gyroInputs.heading;
     }
 
-     public boolean goForward(Measure<Angle> target_angle, Measure<Velocity<Distance>> Mps, Measure<Distance> target_meters){
+     public boolean goForward(Measure<Angle> target_angle, Measure<Distance> target_meters, Measure<Velocity<Distance>> Mps, Measure<Velocity<Angle>> Dps){
        
         //double driverr = (target_rotations.in(Rotations) - ((lInputs.motor1Position + rInputs.motor1Position) / 2));
         double driverr = (target_meters.in(Meters)) - ((lInputs.distanceTraveled + rInputs.distanceTraveled) / 2);
         double turnerr =  target_angle.in(Degrees) - gyroInputs.heading;
 
-        double turnpidOutput = turn_pidController.calculate(turnerr);
-        double drivepidOutput = MathUtil.clamp(distance_pidController.calculate(driverr), -Mps.in(MetersPerSecond), Mps.in(MetersPerSecond));
-
-        ChassisSpeeds speeds = new ChassisSpeeds(
-            -drivepidOutput,
+        double turnpidOutput = Math.max(Math.min(turn_pidController.calculate(turnerr), Dps.in(DegreesPerSecond)), -Dps.in(DegreesPerSecond));
+        double drivepidOutput = Math.max(Math.min(distance_pidController.calculate(driverr), Mps.in(MetersPerSecond)), -Mps.in(MetersPerSecond));
+         if(turnerr >= 1){
+            speeds = new ChassisSpeeds(
+            0,
             0, 
             turnpidOutput 
         );
+        }
+        else{
+            speeds = new ChassisSpeeds(
+            drivepidOutput,
+            0, 
+            turnpidOutput 
+        );
+        }
+
         setVelocity(speeds);
         Logger.recordOutput("drive/drive err", driverr );
         Logger.recordOutput("drive/drive pid output ", drivepidOutput );
