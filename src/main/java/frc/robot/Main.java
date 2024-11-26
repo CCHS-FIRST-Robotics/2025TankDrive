@@ -9,10 +9,9 @@ import edu.wpi.first.wpilibj.RobotBase;
 /**
  * to do: 
  * 
- * check if the gyro is accurately logging
+ * tune P
  * 
  * add twist support for sim
- * standardize logged units for everything
  */
 
 public final class Main {

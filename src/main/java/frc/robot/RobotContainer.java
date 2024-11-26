@@ -9,7 +9,7 @@ import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.subsystems.drive.*; 
 
 public class RobotContainer {
-    private final CommandXboxController controller = new CommandXboxController(Constants.CONTROLLER_PORT_1);
+    private final CommandXboxController controller = new CommandXboxController(Constants.CONTROLLER_PORT);
     
     private final Drive drive;
 
@@ -18,8 +18,8 @@ public class RobotContainer {
             case REAL: // real
                 drive = new Drive(
                     new GyroIONavX(),
-                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
-                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false, true), 
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true, true)
                 );
                 break;
             case SIM: // simulated
@@ -32,8 +32,8 @@ public class RobotContainer {
             default: // replayed
                 drive = new Drive(
                     new GyroIONavX(),
-                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false), 
-                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true)
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_1, Constants.TALONSRX_ID_2, false, true), 
+                    new DriveSideIOTalonSRX(Constants.TALONSRX_ID_3, Constants.TALONSRX_ID_4, true, true)
                 );
                 break;
         }

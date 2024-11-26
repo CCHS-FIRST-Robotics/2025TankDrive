@@ -3,11 +3,10 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj2.command.*;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.*;
-import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.units.*;
+import org.littletonrobotics.junction.Logger;
 import frc.robot.Constants;
 
 public class Drive extends SubsystemBase{
@@ -24,15 +23,15 @@ public class Drive extends SubsystemBase{
     public Drive(
         GyroIO gyroIO, 
         DriveSideIO leftIO, 
-        DriveSideIO rightIO)
-    {
+        DriveSideIO rightIO
+    ) {
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
         this.odometry = new DifferentialDriveOdometry(
-            gyroInputs.rotation2D,
-            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
-            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE,
+            new Rotation2d(), 
+            0, 
+            0, 
             new Pose2d(0, 0, new Rotation2d())
         );
     }
@@ -40,13 +39,13 @@ public class Drive extends SubsystemBase{
     @Override
     public void periodic() {
         gyroIO.updateInputs(gyroInputs);
-        lIO.updateInputs(lInputs);
-        rIO.updateInputs(rInputs);
         robotPose2d = odometry.update(
             gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),
-            lInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE, 
-            rInputs.motor1Position.in(Rotations) * Constants.GEAR_RATIO * Constants.WHEEL_CIRCUMFERENCE
+            lInputs.distanceTraveled, 
+            rInputs.distanceTraveled
         );
+        lIO.updateInputs(lInputs);
+        rIO.updateInputs(rInputs);
 
         Logger.processInputs("Gyro ", gyroInputs);
         Logger.recordOutput("RobotPose2D", robotPose2d);
@@ -59,13 +58,21 @@ public class Drive extends SubsystemBase{
         rIO.setVoltage(rVolts);
     }
 
-    public void setVelocity(ChassisSpeeds speeds){
-        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+    public void setVelocity(ChassisSpeeds chassisSpeeds){
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
 
-        double leftRadiansPerSecond = wheelSpeeds.leftMetersPerSecond / Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
-        double rightRadiansPerSecond = wheelSpeeds.rightMetersPerSecond / Constants.WHEEL_RADIUS / Constants.GEAR_RATIO;
-        
-        lIO.setVelocity(RadiansPerSecond.of(leftRadiansPerSecond));
-        rIO.setVelocity(RadiansPerSecond.of(rightRadiansPerSecond));
+        Measure<Velocity<Angle>> leftMotorVelocity = RotationsPerSecond.of(
+            wheelSpeeds.leftMetersPerSecond 
+            / Constants.WHEEL_CIRCUMFERENCE.in(Meters) // to get rotations per second of the wheel
+            * Constants.GEAR_RATIO // to get rotations per second of the motor
+        );
+        Measure<Velocity<Angle>> rightMotorVelocity = RotationsPerSecond.of(
+            wheelSpeeds.rightMetersPerSecond 
+            / Constants.WHEEL_CIRCUMFERENCE.in(Meters) // to get rotations per second of the wheel
+            * Constants.GEAR_RATIO // to get rotations per second of the motor
+        );
+
+        lIO.setVelocity(leftMotorVelocity); // should be 88.83 rotations per second
+        rIO.setVelocity(rightMotorVelocity);
     }
 }
