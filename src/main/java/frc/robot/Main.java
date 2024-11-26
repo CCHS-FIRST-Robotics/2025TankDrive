@@ -6,7 +6,9 @@ import edu.wpi.first.wpilibj.RobotBase;
 /**
  * to do: 
  * 
- * tune P
+ * see how to do pathplanner
+ * that tells you whether heading PID is necessary
+ * 
  * 
  * add twist support for sim
  */
