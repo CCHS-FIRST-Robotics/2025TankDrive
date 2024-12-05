@@ -111,7 +111,7 @@ public class Drive extends SubsystemBase{
         }
         else{
             speeds = new ChassisSpeeds(
-            drivepidOutput,
+            -drivepidOutput,
             0, 
             turnpidOutput 
         );
