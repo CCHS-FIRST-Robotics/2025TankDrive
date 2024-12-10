@@ -57,10 +57,6 @@ public class RobotContainer {
         
         //controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(90), Meters.of(1), MetersPerSecond.of(.2), DegreesPerSecond.of(5)));
 
-        controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(0), Meters.of(2), MetersPerSecond.of(.3), DegreesPerSecond.of(0))
-         .andThen(new MoveForwardCommand(drive, Degrees.of(90), Meters.of(1), MetersPerSecond.of(.3), DegreesPerSecond.of(5)))
-         .andThen(new MoveForwardCommand(drive, Degrees.of(90), Meters.of(2), MetersPerSecond.of(.3), DegreesPerSecond.of(5)))
-         .andThen(new MoveForwardCommand(drive, Degrees.of(90), Meters.of(1), MetersPerSecond.of(.3), DegreesPerSecond.of(5)))
-         .andThen(new MoveForwardCommand(drive, Degrees.of(90), Meters.of(0), MetersPerSecond.of(.1), DegreesPerSecond.of(0))));
-    }
+        controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(90), Meters.of(0), MetersPerSecond.of(0), DegreesPerSecond.of(.5)))
+         
     }
