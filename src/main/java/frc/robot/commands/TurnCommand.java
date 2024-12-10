@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import static edu.wpi.first.units.Units.Degrees;
 
 import static edu.wpi.first.units.Units.Meters;
-
+import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;
@@ -43,7 +43,7 @@ public class TurnCommand extends Command {
 
     @Override
     public void execute() {
-        finished = drive.goForward(target_Angle, 0, 0, Dps );
+        finished = drive.goForward(target_Angle, Meters.of(0), MetersPerSecond.of(0), Dps);
 
     }
 

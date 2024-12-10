@@ -102,20 +102,13 @@ public class Drive extends SubsystemBase{
 
         double turnpidOutput = Math.max(Math.min(turn_pidController.calculate(turnerr), Dps.in(DegreesPerSecond)), -Dps.in(DegreesPerSecond));
         double drivepidOutput = Math.max(Math.min(distance_pidController.calculate(driverr), Mps.in(MetersPerSecond)), -Mps.in(MetersPerSecond));
-         if(turnerr >= 1){
-            speeds = new ChassisSpeeds(
-            0,
-            0, 
-            turnpidOutput 
+        
+        speeds = new ChassisSpeeds(
+        -drivepidOutput,
+        0, 
+        turnpidOutput 
         );
-        }
-        else{
-            speeds = new ChassisSpeeds(
-            -drivepidOutput,
-            0, 
-            turnpidOutput 
-        );
-        }
+        
 
         setVelocity(speeds);
         Logger.recordOutput("drive/drive err", driverr );

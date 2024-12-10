@@ -6,8 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import static edu.wpi.first.units.Units.Degrees;
 
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Radian;
-import static edu.wpi.first.units.Units.Radians;
 
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;

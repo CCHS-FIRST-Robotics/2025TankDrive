@@ -22,6 +22,7 @@ public class MoveForwardCommand extends Command {
     boolean finished;
     Measure<Distance> target_Meters;
     Measure<Angle> target_Angle;
+    Measure<Velocity<Angle>> Dps;
   
     
 
@@ -29,10 +30,11 @@ public class MoveForwardCommand extends Command {
         Drive drive, 
         Measure<Angle> angle, 
         Measure<Distance> distance,
-        Measure<Velocity<Distance>> Mps) {
+        Measure<Velocity<Distance>> Mps,
+        Measure<Velocity<Angle>> Dps) {
 
         this.drive = drive;
-        this.angle = angle;
+        this.Dps = Dps;
         this.Mps = Mps; 
         this.distance = distance; 
         this.finished = false;
