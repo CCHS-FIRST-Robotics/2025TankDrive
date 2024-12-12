@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.subsystems.drive.*; 
@@ -49,5 +51,17 @@ public class RobotContainer {
                 () -> controller.getRightX()
             )
         );
+    }
+
+    public Command getAutonomousCommand() {
+        return new InstantCommand(()->System.out.println("hi"));
+        // return new AutoCommandSequenceBuilder(
+        //     AutoPathConstants.twoStraight, // specifies the auto to run
+        //     drive, 
+        //     arm, 
+        //     intake, 
+        //     handoff, 
+        //     shooter
+        // ).getAutoCommandSequence();
     }
 }
