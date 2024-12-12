@@ -14,9 +14,9 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
     private final SimpleMotorFeedforward F;
     int encoderTicks = 4096;
 
-    private final double kP = 0.32;
+    private final double kP = 0;
     private final double kI = 0;
-    private final double kD = 0.01;
+    private final double kD = 0;
     private final double kS = 0;
     private final double kV = 0.135; // at 88.83 rotations per second, output 12 volts
     private final double kA = 0;
@@ -33,7 +33,7 @@ public class DriveSideIOTalonSRX implements DriveSideIO {
         motor1.configFactoryDefault();
         motor1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor1.setSelectedSensorPosition(0);
-        motor1.setSensorPhase(true); // ! yeah check this
+        motor1.setSensorPhase(true);
         motor1.setInverted(isInverted);
         motor2.follow(motor1);
         motor2.setInverted(InvertType.FollowMaster);

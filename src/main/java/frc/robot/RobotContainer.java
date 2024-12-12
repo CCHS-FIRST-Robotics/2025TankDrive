@@ -54,6 +54,5 @@ public class RobotContainer {
          .andThen(new MoveForwardCommand(drive, 1.5))
          .andThen(new Turn(drive, -180))
          .andThen(new MoveForwardCommand(drive, 6));
-         
     }
 }
