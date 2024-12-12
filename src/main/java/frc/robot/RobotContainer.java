@@ -9,7 +9,7 @@ import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.DriveWithJoysticks;
-import frc.robot.commands.MoveForwardCommand;
+import frc.robot.commands.*;
 import frc.robot.subsystems.drive.*; 
 
 public class RobotContainer {
@@ -46,18 +46,16 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        drive.setDefaultCommand(
-            new DriveWithJoysticks(
-                drive, 
-                () -> -controller.getLeftY(), // xboxcontroller is flipped
-                () -> controller.getRightX()
-            )
-        );
+        // drive.setDefaultCommand(
+        //     new DriveWithJoysticks(
+        //         drive, 
+        //         () -> -controller.getLeftY(), // xboxcontroller is flipped
+        //         () -> controller.getRightX()
+        //     )
+        // );
 
-        
         //controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(90), Meters.of(1), MetersPerSecond.of(.2), DegreesPerSecond.of(5)));
 
-        controller.b().onTrue(new MoveForwardCommand(drive, Degrees.of(90), Meters.of(0), MetersPerSecond.of(0), DegreesPerSecond.of(.5)));
-         
+        controller.b().onTrue(new TurnCommand(drive, Degrees.of(90), DegreesPerSecond.of(.5)));
     }
 }
