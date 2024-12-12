@@ -16,7 +16,7 @@ public class Drive extends SubsystemBase{
     private final DifferentialDriveOdometry odometry;
     private Pose2d robotPose2d = new Pose2d();
     
-    PIDController headingController = new PIDController(0.04, 0, 0.01);
+    PIDController headingController = new PIDController(0.0, 0, 0.0);
     boolean piding = false;
     double targetHeading = 0;
 
