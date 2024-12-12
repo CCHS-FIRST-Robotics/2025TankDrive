@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.units.*;
@@ -15,6 +16,10 @@ public class Drive extends SubsystemBase{
     private final DifferentialDriveOdometry odometry;
     private Pose2d robotPose2d = new Pose2d();
     
+    PIDController headingController = new PIDController(0.04, 0, 0.01);
+    boolean piding = false;
+    double targetHeading = 0;
+
     private final DriveSideIO lIO, rIO;
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
     private final DriveSideIOInputsAutoLogged lInputs = new DriveSideIOInputsAutoLogged();
@@ -24,8 +29,8 @@ public class Drive extends SubsystemBase{
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
-        this.odometry = new DifferentialDriveOdometry(new Rotation2d(), 0, 0, new Pose2d(0, 0, new Rotation2d())
-        );
+        this.odometry = new DifferentialDriveOdometry(new Rotation2d(), 0, 0, new Pose2d(0, 0, new Rotation2d()));
+
     }
 
     @Override
@@ -39,6 +44,7 @@ public class Drive extends SubsystemBase{
         Logger.recordOutput("RobotPose2D", robotPose2d);
         Logger.processInputs("Left side ", lInputs);
         Logger.processInputs("Right side ", rInputs);
+
     }
 
     public void setVoltage(Measure<Voltage> lVolts, Measure<Voltage> rVolts){
@@ -47,6 +53,22 @@ public class Drive extends SubsystemBase{
     }
 
     public void setVelocity(ChassisSpeeds chassisSpeeds){
+        if (chassisSpeeds.omegaRadiansPerSecond == 0 && chassisSpeeds.vxMetersPerSecond != 0 && !piding) {
+            targetHeading = gyroInputs.heading;
+            piding = true;
+        } 
+        
+        if (chassisSpeeds.omegaRadiansPerSecond != 0 && chassisSpeeds.vxMetersPerSecond == 0) {
+            piding = false;
+        }
+
+        if(piding){
+            chassisSpeeds = new ChassisSpeeds(
+                chassisSpeeds.vxMetersPerSecond, 
+                chassisSpeeds.vyMetersPerSecond, 
+                chassisSpeeds.omegaRadiansPerSecond + headingController.calculate(gyroInputs.heading, targetHeading));
+        } 
+
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
 
         Measure<Velocity<Angle>> leftMotorVelocity = RotationsPerSecond.of(
@@ -75,4 +97,5 @@ public class Drive extends SubsystemBase{
     public Rotation2d getGyroRotation() {
         return gyroInputs.rotation2D;
     }
+
 }
