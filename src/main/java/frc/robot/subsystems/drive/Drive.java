@@ -39,8 +39,8 @@ public class Drive extends SubsystemBase{
         this.lIO = leftIO;
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
-        this.turn_Kp = .03;
-        this.turn_Ki = 0.01;
+        this.turn_Kp = .2;
+        this.turn_Ki = 0.0;
         this.turn_Kd = 0.01;
         this.distance_Kp = 10;
         this.distance_Ki = 0.0;
@@ -104,7 +104,7 @@ public class Drive extends SubsystemBase{
         double drivepidOutput = Math.max(Math.min(distance_pidController.calculate(driverr), Mps.in(MetersPerSecond)), -Mps.in(MetersPerSecond));
         
         speeds = new ChassisSpeeds(
-        -drivepidOutput,
+        0,
         0, 
         turnpidOutput 
         );
@@ -118,7 +118,7 @@ public class Drive extends SubsystemBase{
         Logger.recordOutput("drive/turn err", turnerr);
         Logger.recordOutput("drive/turn err cutoff", 1);
         Logger.recordOutput("drive/drive err cutoff", .1);
-        if(driverr <= .01 && turnerr <= 1 ){
+        if(driverr <= .1 && turnerr <= .1 ){
             return true;
         }
         return false;
