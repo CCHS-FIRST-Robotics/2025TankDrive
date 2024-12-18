@@ -1,3 +1,4 @@
+//maybe subtract gyro values instead of gyro.reset()
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
@@ -16,7 +17,7 @@ public class Drive extends SubsystemBase{
     private final DifferentialDriveOdometry odometry;
     private Pose2d robotPose2d = new Pose2d();
     
-    PIDController headingController = new PIDController(0.04, 0, 0.01);
+    PIDController headingController = new PIDController(0.3, 0, 0.0);
     boolean piding = false;
     double targetHeading = 0;
 
@@ -51,21 +52,22 @@ public class Drive extends SubsystemBase{
     }
 
     public void setVelocity(ChassisSpeeds chassisSpeeds){
-        // if (chassisSpeeds.omegaRadiansPerSecond == 0 && chassisSpeeds.vxMetersPerSecond != 0 && !piding) {
-        //     targetHeading = gyroInputs.heading;
-        //     piding = true;
-        // } 
+        if (chassisSpeeds.omegaRadiansPerSecond == 0 && chassisSpeeds.vxMetersPerSecond != 0 && !piding) {
+            targetHeading = gyroInputs.heading;
+            piding = true;
+        } 
         
-        // if (chassisSpeeds.omegaRadiansPerSecond != 0 && chassisSpeeds.vxMetersPerSecond == 0) {
-        //     piding = false;
-        // }
+        if (chassisSpeeds.omegaRadiansPerSecond != 0) {
+            piding = false;
+        }
 
-        // if(piding){
-        //     chassisSpeeds = new ChassisSpeeds(
-        //         chassisSpeeds.vxMetersPerSecond, 
-        //         chassisSpeeds.vyMetersPerSecond, 
-        //         chassisSpeeds.omegaRadiansPerSecond + headingController.calculate(gyroInputs.heading, targetHeading));
-        // } 
+        if(piding){
+            chassisSpeeds = new ChassisSpeeds(
+                chassisSpeeds.vxMetersPerSecond, 
+                chassisSpeeds.vyMetersPerSecond, 
+                chassisSpeeds.omegaRadiansPerSecond - headingController.calculate(gyroInputs.heading, targetHeading)
+            );
+        } 
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
 
         Measure<Velocity<Angle>> leftMotorVelocity = RotationsPerSecond.of(
