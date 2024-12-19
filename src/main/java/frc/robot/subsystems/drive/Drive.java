@@ -34,7 +34,7 @@ public class Drive extends SubsystemBase{
     double targetHeading = 0;
     ChassisSpeeds speeds;
     
-    PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Forward1m");
 
     private final DriveSideIO lIO, rIO;
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
@@ -46,13 +46,30 @@ public class Drive extends SubsystemBase{
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
         this.odometry = new DifferentialDriveOdometry(new Rotation2d(), 0, 0, new Pose2d(0, 0, new Rotation2d()));
-
         ReplanningConfig replanningConfig = new ReplanningConfig();
 
 
         //AUTOBUILDER
         AutoBuilder.configureLTV(() -> this.robotPose2d, this::resetPose, () -> (this.speeds), this::setVelocity, 0.2, 
         replanningConfig, () -> false, this);
+
+
+        //FOLLOW PATH
+        public Command followPathCommand(String pathName) {
+            try {
+                PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+                return new FollowPathCommand(path, this::getPose, this::getRobotRelativeSpeeds, this::drive, new PPLTVController(0.02), Constants.robotConfig,
+                    () -> {var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                    } return false;}, this);
+            }
+
+        catch(Exception e) {
+            DriverStation.reportError("Error " + e.getMessage(), e.getStackTrace());
+            return Commands.none();
+        }
+    }
         
     }
 
@@ -60,23 +77,6 @@ public class Drive extends SubsystemBase{
         this.robotPose2d = new Pose2d();
     }
 
-
-    //FOLLOW PATH
-    public Command followPathCommand(String pathName) {
-        try {
-            PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
-            return new FollowPathCommand(path, this::getPose, this::getRobotRelativeSpeeds, this::drive, new PPLTVController(0.02), Constants.robotConfig,
-                () -> {var alliance = DriverStation.getAlliance();
-                  if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;
-                  } return false;}, this);
-        }
-
-        catch(Exception e) {
-            DriverStation.reportError("Error " + e.getMessage(), e.getStackTrace());
-            return Commands.none();
-        }
-    }
 
     @Override
     public void periodic() {

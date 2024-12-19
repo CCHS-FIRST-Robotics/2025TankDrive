@@ -69,7 +69,7 @@ public class RobotContainer {
 
         return AutoBuilder.followPath(path);
     } catch (Exception e) {
-        DriverStation.reportError("Nope: " + e.getMessage(), e.getStackTrace());
+        DriverStation.reportError("Error: " + e.getMessage(), e.getStackTrace());
         return Commands.none();
     }
   }
