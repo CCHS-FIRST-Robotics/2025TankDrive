@@ -14,11 +14,21 @@ public class MoveForwardCommand extends Command {
 
     double leftDistance;
     double rightDistance;
+
+    int halfWavelen;
+    int duration;
+    double t = 0;
+    double totalSpeed = 0;
+    double maxVelocity = 3; // 3 m/s
     
-    public MoveForwardCommand(Drive drive, double distanceTarget) {
+    public MoveForwardCommand(Drive drive, double distanceTarget, int halfWavelen, int duration) {
+        addRequirements(drive);
+
         this.drive = drive;
         this.distanceTarget = distanceTarget;
-        addRequirements(drive);
+
+        this.halfWavelen = halfWavelen;
+        this.duration = duration;
     }
 
     @Override
@@ -29,7 +39,17 @@ public class MoveForwardCommand extends Command {
 
     @Override
     public void execute() {
-        drive.setVelocity(new ChassisSpeeds(0.7 * (distanceTarget > 0 ? 1 : -1), 0, 0));
+        double change = maxVelocity / (halfWavelen * (1 / 0.02));
+
+        if (((int) t / halfWavelen) % 2 == 0) { //accelerating
+            change += change;
+            totalSpeed += change;
+        } else { //decelerating
+            change -= change;
+            totalSpeed -= change;
+        }
+
+        drive.setVelocity(new ChassisSpeeds(0.8 * (distanceTarget > 0 ? 1 : -1), 0, 0));
         leftDistance = drive.getLeftEncoderDistance() - leftStartingDistance;
         rightDistance = drive.getRightEncoderDistance() - rightStartingDistance;
     } 
