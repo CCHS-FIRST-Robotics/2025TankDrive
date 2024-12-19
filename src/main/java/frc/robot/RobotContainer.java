@@ -53,17 +53,17 @@ public class RobotContainer {
         );
     }
 
-    /*public Command getAutonomousCommand() {
+    public Command getAutonomousCommand() {
          return new MoveForwardCommand(drive, 2)
          .andThen(new Turn(drive, -90))
          .andThen(new MoveForwardCommand(drive, 1.5))
          .andThen(new Turn(drive, -180))
          .andThen(new MoveForwardCommand(drive, 2));
     }
-    */
+    
 
 
-    public Command getAutonomousCommand() {
+    /*public Command getAutonomousCommand() {
     try{
         PathPlannerPath path = PathPlannerPath.fromPathFile("Forward1m");
 
@@ -73,4 +73,5 @@ public class RobotContainer {
         return Commands.none();
     }
   }
+  */
 }
