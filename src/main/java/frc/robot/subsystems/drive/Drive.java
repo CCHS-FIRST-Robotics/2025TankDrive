@@ -3,12 +3,23 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.units.*;
+import edu.wpi.first.wpilibj.DriverStation;
+
 import org.littletonrobotics.junction.Logger;
+
+import com.pathplanner.lib.auto.*;
+import com.pathplanner.lib.controllers.PPLTVController;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import frc.robot.Constants;
 
 public class Drive extends SubsystemBase{
@@ -20,6 +31,9 @@ public class Drive extends SubsystemBase{
     PIDController headingController = new PIDController(0.3, 0, 0.0);
     boolean piding = false;
     double targetHeading = 0;
+    ChassisSpeeds speeds;
+    
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
 
     private final DriveSideIO lIO, rIO;
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
@@ -31,6 +45,17 @@ public class Drive extends SubsystemBase{
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
         this.odometry = new DifferentialDriveOdometry(new Rotation2d(), 0, 0, new Pose2d(0, 0, new Rotation2d()));
+
+        ReplanningConfig replanningConfig = new ReplanningConfig();
+
+
+        AutoBuilder.configureLTV(() -> this.robotPose2d, this::resetPose, () -> (this.speeds), this::setVelocity, 0.2, 
+        replanningConfig, () -> false, this);
+        
+    }
+
+    private void resetPose(Pose2d pose) {
+        this.robotPose2d = new Pose2d();
     }
 
     @Override
@@ -52,6 +77,7 @@ public class Drive extends SubsystemBase{
     }
 
     public void setVelocity(ChassisSpeeds chassisSpeeds){
+        
         if (chassisSpeeds.omegaRadiansPerSecond == 0 && chassisSpeeds.vxMetersPerSecond != 0 && !piding) {
             targetHeading = gyroInputs.heading;
             piding = true;
@@ -81,8 +107,12 @@ public class Drive extends SubsystemBase{
             * Constants.GEAR_RATIO // to get rotations per second of the motor
         );
 
+        speeds = chassisSpeeds;
+
         lIO.setVelocity(leftMotorVelocity); // should be 88.83 rotations per second
         rIO.setVelocity(rightMotorVelocity);
+
+        
     }
 
     public double getLeftEncoderDistance() {
