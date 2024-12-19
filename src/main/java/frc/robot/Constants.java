@@ -25,4 +25,6 @@ public final class Constants {
     public static final double GEAR_RATIO = 12.755; // for every GEAR_RATIO rotations of the input, the output rotates once
     // public static final Measure<Velocity<Distance>> MAX_SPEED = MetersPerSecond.of(3.334);
     public static final Measure<Velocity<Distance>> MAX_SPEED = MetersPerSecond.of(1);
+
+
 }

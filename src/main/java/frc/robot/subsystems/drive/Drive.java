@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.*;
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.controllers.PPLTVController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
@@ -49,6 +50,7 @@ public class Drive extends SubsystemBase{
         ReplanningConfig replanningConfig = new ReplanningConfig();
 
 
+        //AUTOBUILDER
         AutoBuilder.configureLTV(() -> this.robotPose2d, this::resetPose, () -> (this.speeds), this::setVelocity, 0.2, 
         replanningConfig, () -> false, this);
         
@@ -56,6 +58,24 @@ public class Drive extends SubsystemBase{
 
     private void resetPose(Pose2d pose) {
         this.robotPose2d = new Pose2d();
+    }
+
+
+    //FOLLOW PATH
+    public Command followPathCommand(String pathName) {
+        try {
+            PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+            return new FollowPathCommand(path, this::getPose, this::getRobotRelativeSpeeds, this::drive, new PPLTVController(0.02), Constants.robotConfig,
+                () -> {var alliance = DriverStation.getAlliance();
+                  if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                  } return false;}, this);
+        }
+
+        catch(Exception e) {
+            DriverStation.reportError("Error " + e.getMessage(), e.getStackTrace());
+            return Commands.none();
+        }
     }
 
     @Override
