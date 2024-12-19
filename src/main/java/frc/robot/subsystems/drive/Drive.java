@@ -24,6 +24,24 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import frc.robot.Constants;
 
 public class Drive extends SubsystemBase{
+
+    //FOLLOW PATH
+        public Command followPathCommand(String pathName) {
+            try {
+                PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+                return new FollowPathCommand(path, this::getPose, this::getRobotRelativeSpeeds, this::drive, new PPLTVController(0.02), Constants.robotConfig,
+                    () -> {var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                    } return false;}, this);
+            }
+
+        catch(Exception e) {
+            DriverStation.reportError("Error " + e.getMessage(), e.getStackTrace());
+            return Commands.none();
+        }
+    }
+    
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final DifferentialDriveOdometry odometry;
@@ -52,24 +70,6 @@ public class Drive extends SubsystemBase{
         //AUTOBUILDER
         AutoBuilder.configureLTV(() -> this.robotPose2d, this::resetPose, () -> (this.speeds), this::setVelocity, 0.2, 
         replanningConfig, () -> false, this);
-
-
-        //FOLLOW PATH
-        public Command followPathCommand(String pathName) {
-            try {
-                PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
-                return new FollowPathCommand(path, this::getPose, this::getRobotRelativeSpeeds, this::drive, new PPLTVController(0.02), Constants.robotConfig,
-                    () -> {var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;
-                    } return false;}, this);
-            }
-
-        catch(Exception e) {
-            DriverStation.reportError("Error " + e.getMessage(), e.getStackTrace());
-            return Commands.none();
-        }
-    }
         
     }
 
