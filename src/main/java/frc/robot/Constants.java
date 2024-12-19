@@ -3,6 +3,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.units.*;
 
 public final class Constants {
@@ -25,6 +26,8 @@ public final class Constants {
     public static final double GEAR_RATIO = 12.755; // for every GEAR_RATIO rotations of the input, the output rotates once
     // public static final Measure<Velocity<Distance>> MAX_SPEED = MetersPerSecond.of(3.334);
     public static final Measure<Velocity<Distance>> MAX_SPEED = MetersPerSecond.of(1);
+
+    public static final RobotConfig robotConfig = new RobotConfig(new DifferentialDriveKinematics(0.6), 1.0, 2.0);
 
 
 }
