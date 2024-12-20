@@ -14,12 +14,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 import org.littletonrobotics.junction.Logger;
 
+//PATHPLANNER LIBRARIES
 import com.pathplanner.lib.auto.*;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.controllers.PPLTVController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.config.RobotConfig;
 
 import frc.robot.Constants;
 
@@ -28,8 +30,11 @@ public class Drive extends SubsystemBase{
     //FOLLOW PATH
         public Command followPathCommand(String pathName) {
             try {
+
+                RobotConfig config = RobotConfig.fromGUISettings();
+                
                 PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
-                return new FollowPathCommand(path, this::getPose, this::getRobotRelativeSpeeds, this::drive, new PPLTVController(0.02), Constants.robotConfig,
+                return new FollowPathCommand(path, this::getPose, this::getRobotRelativeSpeeds, this::drive, new PPLTVController(0.02), config,
                     () -> {var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
                     return alliance.get() == DriverStation.Alliance.Red;
@@ -85,6 +90,7 @@ public class Drive extends SubsystemBase{
         robotPose2d = odometry.update(gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),lInputs.distanceTraveled, rInputs.distanceTraveled);
         lIO.updateInputs(lInputs);
         rIO.updateInputs(rInputs);
+        
 
         Logger.processInputs("Gyro ", gyroInputs);
         Logger.recordOutput("RobotPose2D", robotPose2d);

@@ -49,7 +49,7 @@ public class MoveForwardCommand extends Command {
             totalSpeed -= change;
         }
 
-        drive.setVelocity(new ChassisSpeeds(0.8 * (distanceTarget > 0 ? 1 : -1), 0, 0));
+        drive.setVelocity(new ChassisSpeeds(totalSpeed * (distanceTarget > 0 ? 1 : -1), 0, 0));
         leftDistance = drive.getLeftEncoderDistance() - leftStartingDistance;
         rightDistance = drive.getRightEncoderDistance() - rightStartingDistance;
     } 
