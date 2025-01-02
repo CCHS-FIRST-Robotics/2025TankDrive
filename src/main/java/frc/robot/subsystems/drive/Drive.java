@@ -3,23 +3,62 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.units.*;
+import edu.wpi.first.wpilibj.DriverStation;
+
 import org.littletonrobotics.junction.Logger;
+
+//PATHPLANNER LIBRARIES
+import com.pathplanner.lib.auto.*;
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.controllers.PPLTVController;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.config.RobotConfig;
+
 import frc.robot.Constants;
 
 public class Drive extends SubsystemBase{
+
+    //FOLLOW PATH
+        public Command followPathCommand(String pathName) {
+            try {
+
+                RobotConfig config = RobotConfig.fromGUISettings();
+                
+                PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+                return new FollowPathCommand(path, this::getPose, this::getRobotRelativeSpeeds, this::drive, new PPLTVController(0.02), config,
+                    () -> {var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                    } return false;}, this);
+            }
+
+        catch(Exception e) {
+            DriverStation.reportError("Error " + e.getMessage(), e.getStackTrace());
+            return Commands.none();
+        }
+    }
+    
+
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final DifferentialDriveOdometry odometry;
     private Pose2d robotPose2d = new Pose2d();
     
-    PIDController headingController = new PIDController(0.3, 0, 0.0);
+    PIDController headingController = new PIDController(0.35, 0, 0.0);
     boolean piding = false;
     double targetHeading = 0;
+    ChassisSpeeds speeds;
+    
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Forward1m");
 
     private final DriveSideIO lIO, rIO;
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH);
@@ -31,7 +70,19 @@ public class Drive extends SubsystemBase{
         this.rIO = rightIO;
         this.gyroIO = gyroIO;
         this.odometry = new DifferentialDriveOdometry(new Rotation2d(), 0, 0, new Pose2d(0, 0, new Rotation2d()));
+        ReplanningConfig replanningConfig = new ReplanningConfig();
+
+
+        //AUTOBUILDER
+        AutoBuilder.configureLTV(() -> this.robotPose2d, this::resetPose, () -> (this.speeds), this::setVelocity, 0.2, 
+        replanningConfig, () -> false, this);
+        
     }
+
+    private void resetPose(Pose2d pose) {
+        this.robotPose2d = new Pose2d();
+    }
+
 
     @Override
     public void periodic() {
@@ -39,6 +90,7 @@ public class Drive extends SubsystemBase{
         robotPose2d = odometry.update(gyroInputs.connected ? gyroInputs.rotation2D: new Rotation2d(),lInputs.distanceTraveled, rInputs.distanceTraveled);
         lIO.updateInputs(lInputs);
         rIO.updateInputs(rInputs);
+        
 
         Logger.processInputs("Gyro ", gyroInputs);
         Logger.recordOutput("RobotPose2D", robotPose2d);
@@ -52,6 +104,7 @@ public class Drive extends SubsystemBase{
     }
 
     public void setVelocity(ChassisSpeeds chassisSpeeds){
+        
         if (chassisSpeeds.omegaRadiansPerSecond == 0 && chassisSpeeds.vxMetersPerSecond != 0 && !piding) {
             targetHeading = gyroInputs.heading;
             piding = true;
@@ -81,8 +134,12 @@ public class Drive extends SubsystemBase{
             * Constants.GEAR_RATIO // to get rotations per second of the motor
         );
 
+        speeds = chassisSpeeds;
+
         lIO.setVelocity(leftMotorVelocity); // should be 88.83 rotations per second
         rIO.setVelocity(rightMotorVelocity);
+
+        
     }
 
     public double getLeftEncoderDistance() {
